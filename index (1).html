@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kafe Mishka</title>
+  <meta name="description" content="Кафе Mishka — a creative autobiography by Mike.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       COLORS — change these to restyle the whole site.
+       Want the dark gallery-wall look instead?
+       Change data-theme="light" to data-theme="dark"
+       on the <html> tag at the top... or just swap below.
+       ============================================ */
+    :root {
+      --bg:      #f4efe6;   /* warm cream paper */
+      --ink:     #1f1c19;   /* soft black text */
+      --muted:   #8a8178;   /* grey-brown for small text */
+      --line:    #ddd5c8;   /* thin dividers */
+      --accent:  #9c5a3c;   /* terracotta, like fired clay */
+    }
+    /* Dark version (not active yet) */
+    .dark {
+      --bg:      #151413;
+      --ink:     #ece6dc;
+      --muted:   #8d867d;
+      --line:    #2c2a27;
+      --accent:  #c98a62;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    h1, h2, .serif {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Header / navigation ---------- */
+    header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 16px; flex-wrap: wrap;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .logo { font-family: "Instrument Serif", serif; font-size: 26px; }
+    .logo span { color: var(--muted); font-size: 18px; margin-left: 6px; }
+    nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 13px;
+          text-transform: uppercase; letter-spacing: 0.08em; }
+    nav a { color: var(--muted); transition: color .2s; }
+    nav a:hover { color: var(--accent); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      margin: 40px 0 0;
+      min-height: 62vh;
+      display: flex; align-items: flex-end;
+      padding: 40px;
+      background: #d9cdb9;        /* placeholder until you add a photo */
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+    /* To use a photo: upload it as hero.jpg, then replace the
+       line "background: #d9cdb9;" above with:
+       background-image: url("hero.jpg");                     */
+
+    /* subtle film grain */
+    .hero::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      opacity: .18; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+    .hero h1 {
+      position: relative; z-index: 1;
+      font-size: clamp(48px, 9vw, 120px);
+      line-height: .95;
+    }
+    .hero h1 em { color: var(--accent); }
+
+    .intro {
+      max-width: 560px;
+      margin: 56px 0 96px;
+      font-size: 19px;
+    }
+    .intro .serif { font-size: 28px; line-height: 1.3; display: block; margin-bottom: 18px; }
+
+    /* ---------- Sections ---------- */
+    section {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 32px;
+      padding: 56px 0;
+      border-top: 1px solid var(--line);
+    }
+    section h2 { font-size: 40px; line-height: 1.1; }
+    .num { display: block; font-size: 12px; color: var(--muted);
+           letter-spacing: .1em; margin-bottom: 8px; }
+    section p { max-width: 520px; color: var(--ink); }
+    .soon { margin-top: 14px; font-size: 13px; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .08em; }
+
+    footer {
+      padding: 48px 0 64px; margin-top: 40px;
+      border-top: 1px solid var(--line);
+      font-size: 13px; color: var(--muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+
+    @media (max-width: 700px) {
+      section { grid-template-columns: 1fr; gap: 12px; }
+      .hero { padding: 24px; min-height: 50vh; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="/">Кафе Mishka<span>Kafe Mishka</span></a>
+    <nav>
+      <a href="#trip">Trip &amp; Transform</a>
+      <a href="#exhibition">Exhibition</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#style">Style</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Кафе<br><em>Mishka</em></h1>
+  </div>
+
+  <p class="intro">
+    <span class="serif">A creative autobiography.</span>
+    <!-- EDIT ME: your one sentence about Kafe Mishka goes here -->
+    Photographs, pottery, paintings, and the travels that shaped them —
+    gathered in one place by Mike, called Mishka by Neda.
+  </p>
+
+  <section id="trip">
+    <div><span class="num">01</span><h2>Trip &amp; Transform</h2></div>
+    <div>
+      <p>Two printed zines, a two-and-a-half-hour travel film, and the writing
+         that came out of a journey that changed us more than we noticed at the time.</p>
+      <p class="soon">Zines &amp; film coming soon</p>
+      <!-- LATER: Heyzine embeds, YouTube film embed, written pieces -->
+    </div>
+  </section>
+
+  <section id="exhibition">
+    <div><span class="num">02</span><h2>The Exhibition</h2></div>
+    <div>
+      <p>One night in a warehouse: a wall of 35mm prints, a projector, the film,
+         and everyone we love in one room.</p>
+      <p class="soon">Photos coming soon</p>
+      <!-- LATER: gallery wall, projector, the room -->
+    </div>
+  </section>
+
+  <section id="portfolio">
+    <div><span class="num">03</span><h2>Portfolio</h2></div>
+    <div>
+      <p>Film photography, prints, paintings, drawings, and ceramics signed Кафе Mishka.</p>
+      <p class="soon">Work coming soon</p>
+      <!-- LATER: galleries with lightbox -->
+    </div>
+  </section>
+
+  <section id="style">
+    <div><span class="num">04</span><h2>Style</h2></div>
+    <div>
+      <p>Thrift finds, festival looks, and an ongoing style diary.</p>
+      <p class="soon">Diary coming soon</p>
+      <!-- LATER: easy-to-add style entries -->
+    </div>
+  </section>
+
+  <!-- ================= IDEAS PARKING LOT =================
+       Nothing in here shows on the website. Jot ideas freely.
+
+       MUSIC
+       - DJ mixes (SoundCloud embeds)
+       - Laid-back sound experiences, e.g. DanceWave sessions
+       - Spotify playlists referenced in the Trip & Transform zines
+       - Could become nav item 05 (keep nav at 5 max)
+
+       INTERACTIVE GLOBE
+       - Places we've traveled; click a place -> photos from there
+
+       WRITING
+       - Substack posts embedded or linked
+
+       TRIP & TRANSFORM: PUBLIC VS PRIVATE
+       - Public: excerpts only, e.g. one spread shown large,
+         with a few standout stories underneath
+       - Private page: full zines + full film (it includes us /
+         is more of a wedding thing)
+
+       THE EXHIBITION
+       - 3D rendering of the warehouse space
+       - Interactive walkthrough of the gallery wall
+       - Short clips from the film playing inside the space
+
+       ===================================================== -->
+
+  <footer>
+    <span>© 2026 Кафе Mishka</span>
+    <span>kafemishka.com</span>
+  </footer>
+
+</div>
+</body>
+</html>
