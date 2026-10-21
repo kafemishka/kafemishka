@@ -117,6 +117,39 @@
     .soon { margin-top: 14px; font-size: 13px; color: var(--muted);
             text-transform: uppercase; letter-spacing: .08em; }
 
+    /* ---------- Portfolio grid ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .grid img {
+      width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+      display: block; cursor: zoom-in;
+      transition: opacity .25s;
+    }
+    .grid img:hover { opacity: .85; }
+    @media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+
+    /* ---------- Lightbox ---------- */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(15, 14, 13, .96);
+      display: none; align-items: center; justify-content: center;
+    }
+    .lightbox.on { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; }
+    .lb-btn {
+      position: absolute; background: none; border: 0; cursor: pointer;
+      color: #ece6dc; font-size: 44px; line-height: 1; padding: 16px;
+      font-family: "Instrument Serif", serif; opacity: .7;
+    }
+    .lb-btn:hover { opacity: 1; }
+    .lb-close { top: 12px; right: 16px; }
+    .lb-prev  { left: 8px; }
+    .lb-next  { right: 8px; }
+
     footer {
       padding: 48px 0 64px; margin-top: 40px;
       border-top: 1px solid var(--line);
@@ -179,8 +212,10 @@
     <div><span class="num">03</span><h2>Portfolio</h2></div>
     <div>
       <p>Film photography, prints, paintings, drawings, and ceramics signed Кафе Mishka.</p>
-      <p class="soon">Work coming soon</p>
-      <!-- LATER: galleries with lightbox -->
+      <!-- Photos load automatically from the "photos" folder:
+           photos/01.jpg, photos/02.jpg ... up to photos/30.jpg.
+           Missing numbers are simply skipped. -->
+      <div class="grid" id="grid"></div>
     </div>
   </section>
 
@@ -227,5 +262,63 @@
   </footer>
 
 </div>
+
+<!-- Lightbox (the big dark photo viewer) -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lb-btn lb-close" aria-label="Close">×</button>
+  <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
+  <img id="lb-img" alt="">
+  <button class="lb-btn lb-next" aria-label="Next">›</button>
+</div>
+
+<script>
+  /* ---------- Portfolio grid + lightbox ----------
+     Looks for photos/01.jpg through photos/30.jpg.
+     To show more, raise MAX_PHOTOS.                 */
+  const MAX_PHOTOS = 30;
+  const grid = document.getElementById("grid");
+  const lb = document.getElementById("lightbox");
+  const lbImg = document.getElementById("lb-img");
+  let shown = [];   // photos that actually loaded, in order
+  let current = 0;
+
+  for (let i = 1; i <= MAX_PHOTOS; i++) {
+    const src = "photos/" + String(i).padStart(2, "0") + ".jpg";
+    const img = new Image();
+    img.loading = "lazy";
+    img.alt = "";
+    img.dataset.n = i;
+    img.onload = () => {
+      shown.push(img);
+      shown.sort((a, b) => a.dataset.n - b.dataset.n);
+      // keep grid in number order
+      grid.innerHTML = "";
+      shown.forEach(el => grid.appendChild(el));
+    };
+    img.onclick = () => openLb(shown.indexOf(img));
+    img.src = src;   // if the file doesn't exist, it's quietly skipped
+  }
+
+  function openLb(i) {
+    current = (i + shown.length) % shown.length;
+    lbImg.src = shown[current].src;
+    lb.classList.add("on");
+    lb.setAttribute("aria-hidden", "false");
+  }
+  function closeLb() {
+    lb.classList.remove("on");
+    lb.setAttribute("aria-hidden", "true");
+  }
+  lb.querySelector(".lb-close").onclick = closeLb;
+  lb.querySelector(".lb-prev").onclick = e => { e.stopPropagation(); openLb(current - 1); };
+  lb.querySelector(".lb-next").onclick = e => { e.stopPropagation(); openLb(current + 1); };
+  lb.onclick = e => { if (e.target === lb) closeLb(); };
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("on")) return;
+    if (e.key === "Escape") closeLb();
+    if (e.key === "ArrowLeft") openLb(current - 1);
+    if (e.key === "ArrowRight") openLb(current + 1);
+  });
+</script>
 </body>
 </html>
