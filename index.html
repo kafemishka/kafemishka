@@ -273,7 +273,7 @@
 
 <script>
   /* ---------- Portfolio grid + lightbox ----------
-     Looks for photos/01.jpg through photos/30.jpg.
+     Looks for Photos/01.jpg through Photos/30.jpg (any capitalization).
      To show more, raise MAX_PHOTOS.                 */
   const MAX_PHOTOS = 30;
   const grid = document.getElementById("grid");
@@ -282,10 +282,17 @@
   let shown = [];   // photos that actually loaded, in order
   let current = 0;
 
+  // Accepts "photos" or "Photos", and .jpg / .JPG / .jpeg / .JPEG / .png
+  const FOLDERS = ["Photos/", "photos/"];
+  const ENDINGS = [".jpg", ".JPG", ".jpeg", ".JPEG", ".png"];
+
   for (let i = 1; i <= MAX_PHOTOS; i++) {
-    const src = "photos/" + String(i).padStart(2, "0") + ".jpg";
+    const name = String(i).padStart(2, "0");
+    const tries = [];
+    FOLDERS.forEach(f => ENDINGS.forEach(e => tries.push(f + name + e)));
+    let t = 0;
     const img = new Image();
-    img.loading = "lazy";
+    img.loading = "eager";
     img.alt = "";
     img.dataset.n = i;
     img.onload = () => {
@@ -295,8 +302,9 @@
       grid.innerHTML = "";
       shown.forEach(el => grid.appendChild(el));
     };
+    img.onerror = () => { t++; if (t < tries.length) img.src = tries[t]; };
     img.onclick = () => openLb(shown.indexOf(img));
-    img.src = src;   // if the file doesn't exist, it's quietly skipped
+    img.src = tries[0];   // tries each spelling; skipped quietly if none exist
   }
 
   function openLb(i) {
