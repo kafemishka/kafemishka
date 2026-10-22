@@ -311,8 +311,8 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
 .series { width: 100%; }
 .series h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .12em;
              color: var(--accent); font-weight: 700; margin-bottom: 14px; }
-.series .row { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
-.series .row img { flex: none; height: 380px; width: auto; cursor: zoom-in; }
+.series .row { display: flex; flex-wrap: wrap; gap: 16px; }
+.series .row img { flex: none; height: 340px; width: auto; max-width: 100%; object-fit: contain; cursor: zoom-in; }
 
 footer {
   padding: 48px 0 64px; margin-top: 64px;
@@ -332,6 +332,6 @@ footer {
   .float { gap: 40px; }
   .float .piece[class*="z"] { width: 78%; margin: 0; }
   .float .piece.z1, .float .piece.z4 { align-self: flex-end; }
-  .series .row img { height: 240px; }
+  .series .row img { height: 200px; }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }

@@ -222,9 +222,14 @@ async function loadFloat(boxId, folder, series, between, shuffle) {
       const sec = document.createElement("div");
       sec.className = "series";
       sec.innerHTML = "<h3></h3><div class='row'></div>";
-      sec.querySelector("h3").textContent = o.group.title;
+      if (o.group.title) sec.querySelector("h3").textContent = o.group.title;
+      else sec.querySelector("h3").remove();
       const row = sec.querySelector(".row");
-      o.group.files.forEach(f => row.appendChild(makeImg(f, viewSet, n++)));
+      o.group.files.forEach(f => {
+        const img = makeImg(f, viewSet, n++);
+        img.loading = "eager";   // load the whole series, even off-screen ones
+        row.appendChild(img);
+      });
       box.appendChild(reveal(sec));
     }
   });
