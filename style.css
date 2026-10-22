@@ -1,0 +1,206 @@
+/* =====================================================
+   KAFE MISHKA — shared styles for every page
+   =====================================================
+
+   FONTS — to try a different look, change these two lines
+   (and the matching Google Fonts link at the top of each page).
+   Options that support Cyrillic (needed for "Кафе"):
+     Headings: "Manrope", "Cormorant Garamond", "Unbounded",
+               "Playfair Display", "EB Garamond", "Onest"
+     Body:     "Manrope", "Inter", "Onest", "PT Sans"          */
+:root {
+  --font-head: "Manrope", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+
+  /* COLORS */
+  --bg:      #f4efe6;   /* warm cream paper */
+  --ink:     #1f1c19;   /* soft black text */
+  --muted:   #8a8178;   /* grey-brown for small text */
+  --line:    #ddd5c8;   /* thin dividers */
+  --accent:  #9c5a3c;   /* terracotta, like fired clay */
+  --hero-ink: #ffffff;  /* title color on the hero photo */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Header / navigation ---------- */
+header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; flex-wrap: wrap;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+.logo { font-family: var(--font-head); font-weight: 800; font-size: 22px;
+        letter-spacing: -0.03em; }
+nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.1em; }
+nav a { color: var(--muted); transition: color .2s; }
+nav a:hover, nav a.here { color: var(--ink); }
+
+/* ---------- Hero (homepage photo) ---------- */
+.hero {
+  position: relative;
+  margin-top: 32px;
+  min-height: 66vh;
+  display: flex;
+  align-items: flex-start;            /* title sits at the TOP ... */
+  justify-content: flex-start;        /* ... and LEFT, on the sky   */
+  padding: 40px;
+  background-color: #d9cdb9;
+  background-image: url("hero.jpg");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+.hero::after {   /* subtle film grain */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: .18; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.hero h1 {
+  position: relative; z-index: 1;
+  color: var(--hero-ink);
+  font-weight: 800;
+  font-size: clamp(48px, 9vw, 124px);
+  line-height: .9;
+  letter-spacing: -0.05em;
+}
+
+.intro { max-width: 600px; margin: 56px 0 72px; font-size: 19px; }
+.intro strong { display: block; font-family: var(--font-head);
+                font-size: 30px; line-height: 1.2; letter-spacing: -0.03em;
+                margin-bottom: 14px; }
+
+/* ---------- Homepage: clickable section rows ---------- */
+.rows a {
+  display: grid; grid-template-columns: 60px 1fr 2fr 40px;
+  gap: 24px; align-items: baseline;
+  padding: 36px 0;
+  border-top: 1px solid var(--line);
+  transition: color .2s, padding-left .3s;
+}
+.rows a:last-child { border-bottom: 1px solid var(--line); }
+.rows a:hover { color: var(--accent); padding-left: 10px; }
+.rows .num { font-size: 12px; color: var(--muted); letter-spacing: .1em; }
+.rows h2 { font-size: 36px; }
+.rows p { color: var(--muted); max-width: 480px; }
+.rows .arrow { font-size: 22px; text-align: right; }
+
+/* ---------- Inner pages ---------- */
+.page-title { padding: 72px 0 24px; }
+.page-title h1 { font-size: clamp(44px, 7vw, 88px); }
+.page-title p { max-width: 560px; margin-top: 16px; font-size: 18px; color: var(--muted); }
+
+.subnav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+.subnav a {
+  font-size: 12px; text-transform: uppercase; letter-spacing: .08em;
+  border: 1px solid var(--line); padding: 7px 14px; border-radius: 100px;
+  transition: background .2s, color .2s;
+}
+.subnav a:hover { background: var(--ink); color: var(--bg); }
+
+.block {
+  padding: 56px 0;
+  border-top: 1px solid var(--line);
+  margin-top: 32px;
+  scroll-margin-top: 20px;
+}
+.block h2 { font-size: 34px; margin-bottom: 10px; }
+.block > p { max-width: 560px; color: var(--muted); }
+.soon { margin-top: 14px; font-size: 12px; color: var(--muted);
+        text-transform: uppercase; letter-spacing: .1em; }
+
+/* ---------- Zine cards ---------- */
+.zines { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 28px; }
+.zine {
+  border: 1px solid var(--line); padding: 28px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.zine h3 { font-size: 26px; }
+.zine p { color: var(--muted); font-size: 15px; }
+.button {
+  align-self: flex-start; margin-top: 8px;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+  background: var(--ink); color: var(--bg);
+  padding: 11px 20px; border-radius: 100px; border: 0; cursor: pointer;
+  font-family: var(--font-body);
+  transition: background .2s;
+}
+.button:hover { background: var(--accent); }
+.button.ghost { background: none; color: var(--muted); border: 1px solid var(--line); }
+
+/* ---------- Collapsible stories (spreads) ---------- */
+details.story { border-top: 1px solid var(--line); }
+details.story:last-child { border-bottom: 1px solid var(--line); }
+details.story summary {
+  list-style: none; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 24px 0;
+  font-family: var(--font-head); font-weight: 700;
+  font-size: 24px; letter-spacing: -0.02em;
+}
+details.story summary::-webkit-details-marker { display: none; }
+details.story summary::after { content: "+"; font-weight: 400; color: var(--muted);
+                               transition: transform .3s; }
+details.story[open] summary::after { transform: rotate(45deg); }
+details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
+.stories { margin-top: 28px; }
+
+/* ---------- Photo grid ---------- */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 28px; }
+.grid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+            cursor: zoom-in; transition: opacity .25s; }
+.grid img:hover { opacity: .85; }
+
+/* ---------- Lightbox (big dark photo viewer) ---------- */
+.lightbox {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(15, 14, 13, .96);
+  display: none; align-items: center; justify-content: center;
+}
+.lightbox.on { display: flex; }
+.lightbox img { max-width: 92vw; max-height: 88vh; object-fit: contain; }
+.lb-btn {
+  position: absolute; background: none; border: 0; cursor: pointer;
+  color: #ece6dc; font-size: 40px; line-height: 1; padding: 16px; opacity: .7;
+}
+.lb-btn:hover { opacity: 1; }
+.lb-close { top: 12px; right: 16px; }
+.lb-prev  { left: 8px; }
+.lb-next  { right: 8px; }
+
+footer {
+  padding: 48px 0 64px; margin-top: 64px;
+  border-top: 1px solid var(--line);
+  font-size: 13px; color: var(--muted);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .hero { padding: 24px; min-height: 52vh; }
+  .rows a { grid-template-columns: 1fr 30px; gap: 8px; }
+  .rows .num { grid-column: 1 / -1; }
+  .rows p { grid-column: 1 / -1; }
+  .zines { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}

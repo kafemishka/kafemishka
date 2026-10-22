@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Style · Kafe Mishka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="index.html">Кафе Mishka</a>
+    <nav>
+      <a href="trip-and-transform.html">Trip &amp; Transform</a>
+      <a href="exhibition.html">Exhibition</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="ceramics.html">Ceramics</a>
+      <a class="here" href="style.html">Style</a>
+    </nav>
+  </header>
+
+  <div class="page-title">
+    <h1>Style</h1>
+    <p>Thrift finds, festival looks, and an ongoing style diary.</p>
+  </div>
+
+  <!-- Upload photos into a folder named Style: 01.jpg, 02.jpg ... -->
+  <div class="block">
+    <p class="soon">Diary coming soon</p>
+    <div class="grid" id="style-grid"></div>
+  </div>
+
+  <footer>
+    <span>© 2026 Кафе Mishka</span>
+    <a href="index.html">← Home</a>
+  </footer>
+
+</div>
+
+<script src="site.js"></script>
+<script>
+  loadGallery("style-grid", ["Style/", "style/"], 60);
+</script>
+</body>
+</html>

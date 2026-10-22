@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trip &amp; Transform · Kafe Mishka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="index.html">Кафе Mishka</a>
+    <nav>
+      <a class="here" href="trip-and-transform.html">Trip &amp; Transform</a>
+      <a href="exhibition.html">Exhibition</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="ceramics.html">Ceramics</a>
+      <a href="style.html">Style</a>
+    </nav>
+  </header>
+
+  <div class="page-title">
+    <h1>Trip &amp; Transform</h1>
+    <p>The name felt cheesy at first. The transformation was happening the whole time.</p>
+    <div class="subnav">
+      <a href="#zines">Zines</a>
+      <a href="#spreads">Spreads</a>
+      <a href="#film">Film</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#globe">Globe</a>
+      <a href="#locations">Locations</a>
+      <a href="#calendars">Cat Calendars</a>
+    </div>
+  </div>
+
+  <!-- ===== ZINES ===== -->
+  <div class="block" id="zines">
+    <h2>Zines</h2>
+    <p>Two printed volumes of photography and writing from the road.</p>
+    <div class="zines">
+      <div class="zine">
+        <span class="soon" style="margin:0">Volume 1 · 75 pages</span>
+        <h3>Trip &amp; Transform, Vol. 1</h3>
+        <p>Where it started, and where the name came from.</p>
+        <a class="button" href="https://heyzine.com/flip-book/539fd98f04.html" target="_blank" rel="noopener">Open the flipbook ↗</a>
+      </div>
+      <div class="zine">
+        <span class="soon" style="margin:0">Volume 2 · 215 pages</span>
+        <h3>Trip &amp; Transform, Vol. 2</h3>
+        <p>The longer road, and the way it ended.</p>
+        <!-- When Vol 2 is ready on Heyzine, replace the line below with:
+             <a class="button" href="YOUR-VOL2-LINK" target="_blank" rel="noopener">Open the flipbook ↗</a> -->
+        <span class="button ghost">Coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SPREADS ===== -->
+  <div class="block" id="spreads">
+    <h2>From the Pages</h2>
+    <p>Selected spreads. Click a title to open it, click the image to see it large.</p>
+    <p class="soon">Spreads coming soon</p>
+    <div class="stories" id="stories"></div>
+  </div>
+
+  <!-- ===== FILM ===== -->
+  <div class="block" id="film">
+    <h2>The Film</h2>
+    <p>Two and a half hours, shot on iPhone, first shown on a warehouse wall.</p>
+    <p class="soon">Clips coming soon</p>
+    <!-- LATER: short public clips (the full film stays private) -->
+  </div>
+
+  <!-- ===== GALLERY ===== -->
+  <div class="block" id="gallery">
+    <h2>Gallery</h2>
+    <p>Photographs from the trip.</p>
+    <p class="soon">Photos coming soon</p>
+    <div class="grid" id="trip-grid"></div>
+  </div>
+
+  <!-- ===== GLOBE ===== -->
+  <div class="block" id="globe">
+    <h2>The Globe</h2>
+    <p>Everywhere we went. Spin it, pick a place, see what we saw.</p>
+    <p class="soon">Coming later</p>
+  </div>
+
+  <!-- ===== LOCATIONS ===== -->
+  <div class="block" id="locations">
+    <h2>Locations</h2>
+    <p>The places, one by one.</p>
+    <p class="soon">Coming soon</p>
+  </div>
+
+  <!-- ===== CAT CALENDARS ===== -->
+  <div class="block" id="calendars">
+    <h2>Cat Calendars</h2>
+    <p>Exactly what it sounds like.</p>
+    <p class="soon">Coming soon</p>
+  </div>
+
+  <footer>
+    <span>© 2026 Кафе Mishka</span>
+    <a href="index.html">← Home</a>
+  </footer>
+
+</div>
+
+<script src="site.js"></script>
+<script>
+  /* ===== SPREADS LIST =====
+     Each line is one collapsible story. To add one:
+     upload the image (e.g. spread02.jpg), then add a line here.
+     A story only shows up once its image is uploaded.
+     "open: true" means it starts expanded.                      */
+  const STORIES = [
+    { title: "Editor's Letter", file: "letterspread01", open: true },
+    { title: "Spread 01",       file: "spread01" },   // EDIT ME: rename to the story's title
+    { title: "Spread 02",       file: "spread02" },
+    { title: "Spread 03",       file: "spread03" },
+    { title: "Spread 04",       file: "spread04" },
+    { title: "Spread 05",       file: "spread05" },
+  ];
+
+  // Images can sit loose at the top level, or in a folder named Spreads.
+  loadStories("stories", STORIES, ["", "Spreads/", "spreads/"]);
+
+  // Trip gallery: Trip/01.jpg, Trip/02.jpg ... (up to 40)
+  loadGallery("trip-grid", ["Trip/", "trip/"], 40);
+</script>
+</body>
+</html>

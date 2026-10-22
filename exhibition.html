@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Exhibition · Kafe Mishka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="index.html">Кафе Mishka</a>
+    <nav>
+      <a href="trip-and-transform.html">Trip &amp; Transform</a>
+      <a class="here" href="exhibition.html">Exhibition</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="ceramics.html">Ceramics</a>
+      <a href="style.html">Style</a>
+    </nav>
+  </header>
+
+  <div class="page-title">
+    <h1>The Exhibition</h1>
+    <p>One night in a warehouse: a wall of 35mm prints mounted on gatorboard,
+       a projector, the film, and everyone in one room.</p>
+  </div>
+
+  <!-- Upload photos into a folder named Exhibition: 01.jpg, 02.jpg ... -->
+  <div class="block">
+    <p class="soon">Photos coming soon</p>
+    <div class="grid" id="exhibition-grid"></div>
+  </div>
+
+  <footer>
+    <span>© 2026 Кафе Mishka</span>
+    <a href="index.html">← Home</a>
+  </footer>
+
+</div>
+
+<script src="site.js"></script>
+<script>
+  loadGallery("exhibition-grid", ["Exhibition/", "exhibition/"], 40);
+</script>
+</body>
+</html>
