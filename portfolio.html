@@ -26,49 +26,59 @@
   <div class="page-title">
     <h1>Portfolio</h1>
     <p>Work across film, print, paint, and the moving image.</p>
-    <div class="subnav">
-      <a href="#film-photos">Film Photos</a>
-      <a href="#books">Coffee Table Books</a>
-      <a href="#zines">Zines</a>
-      <a href="#videos">Videos</a>
-      <a href="#documentaries">Documentaries</a>
-      <a href="#paintings">Paintings</a>
+  </div>
+
+  <!-- ===================================================
+       ONE TILE PER SECTION.
+       Photo tiles use photo 01 from their folder as the cover;
+       clicking opens every photo in that folder.
+         Film Photos  -> folder "Photos"
+         Paintings    -> folder "Paintings"
+         Coffee Table Books -> folder "Books"
+       =================================================== -->
+  <div class="tiles">
+
+    <div class="tile" id="tile-photos">
+      <div class="cover">Coming soon</div>
+      <h3>Film Photos</h3>
+      <span class="count">35mm</span>
     </div>
-  </div>
 
-  <!-- Film Photos: uses your existing Photos folder (01.jpg, 02.jpg ...) -->
-  <div class="block" id="film-photos">
-    <h2>Film Photos</h2>
-    <p>35mm, mostly. Click any photo to see it large.</p>
-    <p class="soon">Photos coming soon</p>
-    <div class="grid" id="photo-grid"></div>
-  </div>
+    <!-- Zines: both covers, linking to the Trip & Transform zines -->
+    <a class="tile" href="trip-and-transform.html#zines">
+      <div class="cover pair">
+        <img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" alt="Trip & Transform Vol. 1 cover">
+        <!-- When Vol 2 is on Heyzine, swap the next line for its cover image -->
+        <div class="zine-cover-empty">Vol. 2</div>
+      </div>
+      <h3>Zines</h3>
+      <span class="count">Trip &amp; Transform · read</span>
+    </a>
 
-  <div class="block" id="books">
-    <h2>Coffee Table Books</h2>
-    <p class="soon">Coming soon</p>
-  </div>
+    <div class="tile" id="tile-books">
+      <div class="cover">Coming soon</div>
+      <h3>Coffee Table Books</h3>
+      <span class="count">Prints</span>
+    </div>
 
-  <div class="block" id="zines">
-    <h2>Zines</h2>
-    <p>Including <a href="trip-and-transform.html#zines" style="text-decoration:underline">Trip &amp; Transform</a>.</p>
-    <p class="soon">More coming soon</p>
-  </div>
+    <div class="tile">
+      <div class="cover">Coming soon</div>
+      <h3>Videos</h3>
+      <span class="count">Coming soon</span>
+    </div>
 
-  <div class="block" id="videos">
-    <h2>Videos</h2>
-    <p class="soon">Coming soon</p>
-  </div>
+    <div class="tile">
+      <div class="cover">Coming soon</div>
+      <h3>Documentaries</h3>
+      <span class="count">Coming soon</span>
+    </div>
 
-  <div class="block" id="documentaries">
-    <h2>Documentaries</h2>
-    <p class="soon">Coming soon</p>
-  </div>
+    <div class="tile" id="tile-paintings">
+      <div class="cover">Coming soon</div>
+      <h3>Paintings</h3>
+      <span class="count">Coming soon</span>
+    </div>
 
-  <div class="block" id="paintings">
-    <h2>Paintings</h2>
-    <p class="soon">Coming soon</p>
-    <div class="grid" id="paint-grid"></div>
   </div>
 
   <footer>
@@ -80,8 +90,9 @@
 
 <script src="site.js"></script>
 <script>
-  loadGallery("photo-grid", ["Photos/", "photos/"], 40);       // Photos/01.jpg ...
-  loadGallery("paint-grid", ["Paintings/", "paintings/"], 40); // Paintings/01.jpg ...
+  loadTile("tile-photos",    ["Photos/", "photos/"], 60);
+  loadTile("tile-books",     ["Books/", "books/"], 60);
+  loadTile("tile-paintings", ["Paintings/", "paintings/"], 60);
 </script>
 </body>
 </html>

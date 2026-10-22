@@ -149,6 +149,40 @@ nav a:hover, nav a.here { color: var(--ink); }
 .button:hover { background: var(--accent); }
 .button.ghost { background: none; color: var(--muted); border: 1px solid var(--line); }
 
+/* ---------- Heyzine zine covers (open as a pop-up) ---------- */
+.zine .fp-thumb {
+  width: 100%; max-width: 280px; height: auto;
+  box-shadow: 0 12px 30px rgba(0,0,0,.12);
+  transition: transform .35s;
+}
+.zine a:hover .fp-thumb { transform: translateY(-4px) rotate(-1deg); }
+.zine-cover-empty {
+  width: 100%; max-width: 280px; aspect-ratio: 3 / 4;
+  background: var(--line); display: flex; align-items: center; justify-content: center;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+}
+
+/* ---------- Portfolio tiles (one cover per section) ---------- */
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 24px; margin-top: 40px; }
+.tile { display: block; }
+.tile .cover {
+  aspect-ratio: 4 / 5; overflow: hidden;
+  background: var(--line);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+}
+.tile .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.tile.ready, a.tile { cursor: pointer; }
+.tile.ready:hover .cover img, a.tile:hover .cover img { transform: scale(1.04); }
+.tile h3 { font-size: 22px; margin-top: 14px; }
+.tile .count { font-size: 12px; color: var(--muted);
+               text-transform: uppercase; letter-spacing: .1em; }
+.tile.ready:hover .count, a.tile:hover .count { color: var(--accent); }
+/* two zine covers side by side inside one tile */
+.cover.pair { gap: 8px; padding: 18px; }
+.cover.pair img { width: 48%; height: auto; object-fit: contain; box-shadow: 0 8px 20px rgba(0,0,0,.15); }
+.cover.pair .zine-cover-empty { width: 48%; font-size: 10px; }
+
 /* ---------- Collapsible stories (spreads) ---------- */
 details.story { border-top: 1px solid var(--line); }
 details.story:last-child { border-bottom: 1px solid var(--line); }
@@ -202,5 +236,6 @@ footer {
   .rows .num { grid-column: 1 / -1; }
   .rows p { grid-column: 1 / -1; }
   .zines { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: repeat(2, 1fr); gap: 28px 14px; }
   .grid { grid-template-columns: repeat(2, 1fr); }
 }

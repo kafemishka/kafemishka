@@ -48,32 +48,55 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") openLb(lbSet, lbIndex + 1);
 });
 
-/* ---------- Numbered photo gallery ----------
-   Fills a grid with 01, 02, 03 ... from the given folders.
-   Missing numbers are skipped. If nothing is found, the
-   "coming soon" note (if any) stays visible.               */
-function loadGallery(gridId, folders, max) {
-  const grid = document.getElementById(gridId);
-  if (!grid) return;
+/* Find 01, 02, 03 ... in the given folders. Calls done(list). */
+function collectImages(folders, max, done) {
   const found = [];
   let pending = max;
   for (let i = 1; i <= max; i++) {
     findImage(String(i).padStart(2, "0"), folders, src => {
       if (src) found[i] = src;
-      if (--pending === 0) {
-        const list = found.filter(Boolean);
-        if (!list.length) return;
-        const soon = grid.parentElement.querySelector(".soon");
-        if (soon) soon.remove();
-        list.forEach((s, n) => {
-          const img = new Image();
-          img.src = s; img.alt = ""; img.loading = "lazy";
-          img.onclick = () => openLb(list, n);
-          grid.appendChild(img);
-        });
-      }
+      if (--pending === 0) done(found.filter(Boolean));
     });
   }
+}
+
+/* ---------- Numbered photo gallery (full grid) ----------
+   Fills a grid with 01, 02, 03 ... from the given folders.
+   If nothing is found, the "coming soon" note stays.       */
+function loadGallery(gridId, folders, max) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  collectImages(folders, max, list => {
+    if (!list.length) return;
+    const soon = grid.parentElement.querySelector(".soon");
+    if (soon) soon.remove();
+    list.forEach((s, n) => {
+      const img = new Image();
+      img.src = s; img.alt = ""; img.loading = "lazy";
+      img.onclick = () => openLb(list, n);
+      grid.appendChild(img);
+    });
+  });
+}
+
+/* ---------- Gallery tile (one cover photo) ----------
+   Shows photo 01 as the cover. Clicking it opens the
+   whole set in the big viewer.                            */
+function loadTile(tileId, folders, max) {
+  const tile = document.getElementById(tileId);
+  if (!tile) return;
+  collectImages(folders, max, list => {
+    if (!list.length) return;
+    const cover = tile.querySelector(".cover");
+    cover.innerHTML = "";
+    const img = new Image();
+    img.src = list[0]; img.alt = "";
+    cover.appendChild(img);
+    tile.classList.add("ready");
+    tile.querySelector(".count").textContent =
+      list.length + (list.length === 1 ? " image" : " images") + " · view";
+    tile.onclick = () => openLb(list, 0);
+  });
 }
 
 /* ---------- Collapsible stories (spreads) ----------

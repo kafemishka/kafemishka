@@ -42,19 +42,24 @@
     <h2>Zines</h2>
     <p>Two printed volumes of photography and writing from the road.</p>
     <div class="zines">
+      <!-- Vol 1: Heyzine pop-up embed. Click the cover to read it on this page. -->
       <div class="zine">
-        <span class="soon" style="margin:0">Volume 1 · 75 pages</span>
+        <a href="https://heyzine.com/flip-book/539fd98f04.html" target="_blank" class="heyzine-link fp-link" data-heyzine-open="modal">
+          <img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" class="fp-thumb" alt="Trip & Transform Vol. 1 cover">
+        </a>
+        <span class="soon" style="margin-top:14px">Volume 1 · 75 pages</span>
         <h3>Trip &amp; Transform, Vol. 1</h3>
-        <p>Where it started, and where the name came from.</p>
-        <a class="button" href="https://heyzine.com/flip-book/539fd98f04.html" target="_blank" rel="noopener">Open the flipbook ↗</a>
+        <p>Where it started, and where the name came from. Click the cover to read.</p>
       </div>
+
+      <!-- Vol 2: when it's on Heyzine, copy their embed code here,
+           in place of the "zine-cover-empty" line, and remove the
+           style="..." part from their <img> tag. -->
       <div class="zine">
-        <span class="soon" style="margin:0">Volume 2 · 215 pages</span>
+        <div class="zine-cover-empty">Coming soon</div>
+        <span class="soon" style="margin-top:14px">Volume 2 · 215 pages</span>
         <h3>Trip &amp; Transform, Vol. 2</h3>
         <p>The longer road, and the way it ended.</p>
-        <!-- When Vol 2 is ready on Heyzine, replace the line below with:
-             <a class="button" href="YOUR-VOL2-LINK" target="_blank" rel="noopener">Open the flipbook ↗</a> -->
-        <span class="button ghost">Coming soon</span>
       </div>
     </div>
   </div>
@@ -111,6 +116,8 @@
 
 </div>
 
+<!-- Heyzine's pop-up reader (makes the zine covers open on this page) -->
+<script src="https://cdnm.heyzine.com/release/addons.7.min.js" onload="heyzinea.addons.init();"></script>
 <script src="site.js"></script>
 <script>
   /* ===== SPREADS LIST =====
