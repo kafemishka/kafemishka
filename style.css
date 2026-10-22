@@ -314,6 +314,24 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
 .series .row { display: flex; flex-wrap: wrap; gap: 16px; }
 .series .row img { flex: none; height: 340px; width: auto; max-width: 100%; object-fit: contain; cursor: zoom-in; }
 
+/* ---------- Ceramics sections ---------- */
+.cer-section { padding: 72px 0 0; }
+.cer-section:first-child { padding-top: 24px; }
+.cer-title { font-size: clamp(30px, 4vw, 44px); margin-bottom: 28px; text-transform: none; }
+.cer-subtitle { font-size: 20px; font-style: italic; font-weight: 500;
+                letter-spacing: -0.01em; margin: 48px 0 16px; color: var(--accent); }
+.cer-caption { margin-top: 12px; font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+.cer-section .float { margin-top: 0; }
+/* tight grouped cluster: photos keep their shape, packed in columns */
+.bunch { columns: 3 220px; column-gap: 10px; }
+.bunch img { width: 100%; margin-bottom: 10px; break-inside: avoid; cursor: zoom-in; }
+/* one straight row, all the same height */
+.row { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 10px; }
+.row img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; cursor: zoom-in; }
+/* one photo with a caption */
+.single { max-width: 560px; }
+.single img { width: 100%; cursor: zoom-in; }
+
 footer {
   padding: 48px 0 64px; margin-top: 64px;
   border-top: 1px solid var(--line);

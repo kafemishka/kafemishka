@@ -49,10 +49,11 @@
     </a>
 
     <!-- Coffee Table Books: opens the Heyzine flipbook as a pop-up.
-         Cover = shabri01.jpg (uploaded anywhere); until then, Heyzine's cover. -->
+         Cover = shabri01.jpg (top level of the repository). -->
     <a class="tile heyzine-link fp-link" href="https://heyzine.com/flip-book/11b882f12f.html" target="_blank" data-heyzine-open="modal" data-reveal>
       <div class="cover">
-        <img id="shabri-cover" class="fp-thumb" src="https://cdnm.heyzine.com/flip-book/cover/11b882f12f.jpg" alt="Shabriamics cover">
+        <img src="shabri01.jpg" alt="Shabriamics cover"
+             onerror="this.onerror=null; this.src='https://cdnm.heyzine.com/flip-book/cover/11b882f12f.jpg'">
         <span class="cover-hover">Open the book ↗</span>
       </div>
       <h3>Coffee Table</h3>
@@ -93,7 +94,6 @@
 <script>
   coverOnly("tile-photos", "photos");   // cover photo; the tile opens film-photos.html
   loadTile("tile-paintings", "paintings");
-  useCover("shabri-cover", "shabri01");
 </script>
 </body>
 </html>

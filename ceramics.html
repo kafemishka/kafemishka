@@ -26,11 +26,10 @@
     <p>Kafe Mishka ceramics, est. 2026. Every piece signed Кафе Mishka.</p>
   </div>
 
-  <!-- Everything in the "ceramics" folder shows up here automatically. -->
-  <div>
-    <p class="soon">Pieces coming soon</p>
-    <div class="float" id="float"></div>
-  </div>
+  <!-- Everything in the "ceramics" folder shows up here automatically,
+       sorted into the sections listed at the bottom of this file. -->
+  <p class="soon">Pieces coming soon</p>
+  <div id="ceramics"></div>
 
   <footer>
     <span>© 2026 Кафе Mishka</span>
@@ -41,19 +40,102 @@
 
 <script src="site.js"></script>
 <script>
-  /* ===== SERIES =====
-     Photos whose names start with these words are kept together
-     in a row, in number order (cookie01, cookie02, ...).
-     To add a series, add a line. EDIT the titles freely.        */
-  const SERIES = [
-    { prefix: "cookie",    title: "" },            // "" = no title
-    { prefix: "collab",    title: "M+N Collab" },
-    { prefix: "horsehair", title: "Horsehair" },
+  /* ===== CERAMICS SECTIONS =====  EDIT ME
+     Each section collects the photos whose file names START with
+     its prefix (img_, horsehair, collab ...), in number order.
+     Change titles freely. Sections appear in this order.
+
+     layout:  "float"  = airy zig-zag gallery
+              "bunch"  = tight grouped cluster
+              "row"    = one straight row
+              "single" = one photo with a caption underneath
+     shuffle: true = new random order on every visit
+     inside:  a smaller sub-group shown inside the section above it */
+  const SECTIONS = [
+    { title: "Finished Pieces",     prefix: "img_",      layout: "float", shuffle: true },
+    { title: "Horse Hair Raku",     prefix: "horsehair", layout: "bunch" },
+    { title: "M+N Collab",          prefix: "collab",    layout: "bunch" },
+    { title: "Utilitarian Pottery", prefix: "inuse",     layout: "bunch",
+      inside: { title: "Ginger cookie anyone?", prefix: "cookie", layout: "row" } },
+    { title: "",                    prefix: "kafemishkabag", layout: "single",
+      caption: "Pottery bag embroidery by NR" },
   ];
-  // true = a fresh random order on every visit (series stay together).
-  // Change to false for a fixed order (alphabetical by file name).
-  const SHUFFLE = true;
-  loadFloat("float", "ceramics", SERIES, 5, SHUFFLE);
+  // Photos that match no section are shown at the very end, untitled.
+
+  const mix = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  function render(files, layout, shuffle) {
+    files = shuffle ? mix(files.slice()) : files;
+    const box = document.createElement("div");
+    if (layout === "float") {
+      box.className = "float";
+      let prev = null;
+      files.forEach((f, i) => {
+        let opts = [0, 1, 2, 3, 4].filter(z => z !== prev);
+        if (prev !== 0 && prev !== 3) opts = opts.filter(z => z !== 1 && z !== 4);
+        const z = shuffle ? opts[Math.floor(Math.random() * opts.length)] : [0, 1, 2, 3, 4][i % 5];
+        prev = z;
+        const d = document.createElement("div");
+        d.className = "piece z" + z;
+        d.appendChild(makeImg(f, files, i));
+        box.appendChild(reveal(d));
+      });
+    } else {
+      box.className = layout;                       // "bunch", "row" or "single"
+      if (layout === "row") box.style.setProperty("--n", files.length);
+      files.forEach((f, i) => {
+        const img = makeImg(f, files, i);
+        img.loading = "eager";
+        box.appendChild(layout === "bunch" ? reveal(img) : img);
+      });
+      if (layout !== "bunch") reveal(box);
+    }
+    return box;
+  }
+
+  function heading(tag, text, cls) {
+    const h = document.createElement(tag);
+    h.className = cls; h.textContent = text;
+    return h;
+  }
+
+  (async () => {
+    const page = document.getElementById("ceramics");
+    const all = await imagesIn("ceramics");
+    if (!all.length) return;
+    dropSoon(page);
+    const used = new Set();
+    const take = prefix => all.filter(p => !used.has(p) &&
+      baseName(p).toLowerCase().startsWith(prefix.toLowerCase())).map(p => (used.add(p), p));
+
+    const built = SECTIONS.map(sec => {
+      const files = take(sec.prefix);
+      const sub = sec.inside ? { ...sec.inside, files: take(sec.inside.prefix) } : null;
+      return { sec, files, sub };
+    });
+    const leftover = all.filter(p => !used.has(p));
+
+    built.forEach(({ sec, files, sub }) => {
+      if (!files.length && !(sub && sub.files.length)) return;
+      const wrap = document.createElement("section");
+      wrap.className = "cer-section";
+      if (sec.title) wrap.appendChild(reveal(heading("h2", sec.title, "cer-title")));
+      if (files.length) wrap.appendChild(render(files, sec.layout, sec.shuffle));
+      if (sec.caption && files.length) wrap.appendChild(heading("p", sec.caption, "cer-caption"));
+      if (sub && sub.files.length) {
+        if (sub.title) wrap.appendChild(reveal(heading("h3", sub.title, "cer-subtitle")));
+        wrap.appendChild(render(sub.files, sub.layout, false));
+      }
+      page.appendChild(wrap);
+    });
+
+    if (leftover.length) {
+      const wrap = document.createElement("section");
+      wrap.className = "cer-section";
+      wrap.appendChild(render(leftover, "bunch", false));
+      page.appendChild(wrap);
+    }
+  })();
 </script>
 </body>
 </html>
