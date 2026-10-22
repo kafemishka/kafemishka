@@ -48,7 +48,9 @@
   const SERIES = [
     // { prefix: "tokyo", title: "Tokyo" },
   ];
-  loadFloat("float", "photos", SERIES);
+  // true = a fresh random order on every visit. false = by file name.
+  const SHUFFLE = false;
+  loadFloat("float", "photos", SERIES, 5, SHUFFLE);
 </script>
 </body>
 </html>

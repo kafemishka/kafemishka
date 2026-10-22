@@ -163,11 +163,12 @@ function scrollSpy(navId) {
 /* ---------- Floating zig-zag gallery (Ceramics, Film Photos) ----------
    series = [{ prefix: "cookie", title: "Cookie" }, ...]
    Photos named prefix01, prefix02 ... stay together in a row.     */
-async function loadFloat(boxId, folder, series, between) {
+async function loadFloat(boxId, folder, series, between, shuffle) {
   const box = document.getElementById(boxId);
   if (!box) return;
   series = series || [];
   between = between || 5;
+  const mix = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const all = await imagesIn(folder);
   if (!all.length) return;
   dropSoon(box);
@@ -178,12 +179,35 @@ async function loadFloat(boxId, folder, series, between) {
   const inSeries = new Set(groups.flatMap(g => g.files));
   const singles = all.filter(p => !inSeries.has(p));
 
-  const order = [];
-  let s = 0, g = 0;
-  while (s < singles.length || g < groups.length) {
-    for (let k = 0; k < between && s < singles.length; k++)
-      order.push({ type: "piece", file: singles[s++], z: k });
-    if (g < groups.length) order.push({ type: "series", group: groups[g++] });
+  let order = [];
+  if (shuffle) {
+    // New random mix on every visit: loose pieces shuffled, random
+    // zig-zag positions, and each series dropped in at a random spot.
+    mix(singles);
+    mix(groups);
+    order = singles.map(f => ({ type: "piece", file: f }));
+    groups.forEach(gr => {
+      const at = Math.floor(Math.random() * (order.length + 1));
+      order.splice(at, 0, { type: "series", group: gr });
+    });
+    // Random zig-zag position for each piece, avoiding overlaps:
+    // z1/z4 tuck upward, so only use them right after a left-side piece.
+    let prev = null;
+    order.forEach(o => {
+      if (o.type !== "piece") { prev = "series"; return; }
+      let opts = [0, 1, 2, 3, 4].filter(z => z !== prev);
+      if (prev !== 0 && prev !== 3)   // only tuck up next to a left-side piece
+        opts = opts.filter(z => z !== 1 && z !== 4);
+      o.z = opts[Math.floor(Math.random() * opts.length)];
+      prev = o.z;
+    });
+  } else {
+    let s = 0, g = 0;
+    while (s < singles.length || g < groups.length) {
+      for (let k = 0; k < between && s < singles.length; k++)
+        order.push({ type: "piece", file: singles[s++], z: k });
+      if (g < groups.length) order.push({ type: "series", group: groups[g++] });
+    }
   }
 
   const viewSet = order.flatMap(o => o.type === "piece" ? [o.file] : o.group.files);

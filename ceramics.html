@@ -50,7 +50,10 @@
     { prefix: "collab",    title: "Collaborations" },
     { prefix: "horsehair", title: "Horsehair" },
   ];
-  loadFloat("float", "ceramics", SERIES);
+  // true = a fresh random order on every visit (series stay together).
+  // Change to false for a fixed order (alphabetical by file name).
+  const SHUFFLE = true;
+  loadFloat("float", "ceramics", SERIES, 5, SHUFFLE);
 </script>
 </body>
 </html>
