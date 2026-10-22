@@ -68,18 +68,7 @@
     files = shuffle ? mix(files.slice()) : files;
     const box = document.createElement("div");
     if (layout === "float") {
-      box.className = "float";
-      let prev = null;
-      files.forEach((f, i) => {
-        let opts = [0, 1, 2, 3, 4].filter(z => z !== prev);
-        if (prev !== 0 && prev !== 3) opts = opts.filter(z => z !== 1 && z !== 4);
-        const z = shuffle ? opts[Math.floor(Math.random() * opts.length)] : [0, 1, 2, 3, 4][i % 5];
-        prev = z;
-        const d = document.createElement("div");
-        d.className = "piece z" + z;
-        d.appendChild(makeImg(f, files, i));
-        box.appendChild(reveal(d));
-      });
+      return renderFloat(files, shuffle);
     } else {
       box.className = layout;                       // "bunch", "row" or "single"
       if (layout === "row") box.style.setProperty("--n", files.length);
@@ -89,6 +78,12 @@
         box.appendChild(layout === "bunch" ? reveal(img) : img);
       });
       if (layout !== "bunch") reveal(box);
+    }
+    if (layout === "bunch") {                    // whole cluster drifts gently
+      const holder = document.createElement("div");
+      holder.dataset.speed = 0.05;
+      holder.appendChild(box);
+      return holder;
     }
     return box;
   }

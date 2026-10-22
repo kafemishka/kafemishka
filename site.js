@@ -212,13 +212,14 @@ async function loadFloat(boxId, folder, series, between, shuffle) {
 
   const viewSet = order.flatMap(o => o.type === "piece" ? [o.file] : o.group.files);
   let n = 0;
+  // Group consecutive loose pieces into one varied-scale flow
+  let run = [];
+  const flush = () => { if (run.length) { box.appendChild(renderFloat(run, false)); run = []; } };
   order.forEach(o => {
     if (o.type === "piece") {
-      const div = document.createElement("div");
-      div.className = "piece z" + o.z;
-      div.appendChild(makeImg(o.file, viewSet, n++));
-      box.appendChild(reveal(div));
+      run.push(o.file); n++;
     } else {
+      flush();
       const sec = document.createElement("div");
       sec.className = "series";
       sec.innerHTML = "<h3></h3><div class='row'></div>";
@@ -233,6 +234,7 @@ async function loadFloat(boxId, folder, series, between, shuffle) {
       box.appendChild(reveal(sec));
     }
   });
+  flush();
 }
 
 /* ---------- Tile that links to its own page: just fill in the cover ---------- */
@@ -247,3 +249,65 @@ async function coverOnly(tileId, folder) {
   tile.querySelector(".count").textContent =
     list.length + (list.length === 1 ? " photo" : " photos") + " · view";
 }
+
+/* ---------- Varied-scale floating layout ----------
+   Large, medium and small pieces in a loose rhythm, drifting left,
+   right and centre. A piece tucks up beside the one before it only
+   when they sit on opposite sides and can't overlap.               */
+const SIZES = { l: 62, m: 46, s: 32 };          // % of page width (desktop)
+const SIZES_MOBILE = { l: 100, m: 80, s: 64 };
+const RHYTHM = ["l", "s", "m", "s", "m", "l", "s", "s", "m"];
+
+function renderFloat(files, shuffle) {
+  const mix = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  files = shuffle ? mix(files.slice()) : files;
+  const mobile = window.innerWidth < 700;
+  const W = mobile ? SIZES_MOBILE : SIZES;
+  const start = shuffle ? Math.floor(Math.random() * RHYTHM.length) : 0;
+  const box = document.createElement("div");
+  box.className = "flow";
+  let prev = null;
+  files.forEach((f, i) => {
+    const size = RHYTHM[(start + i) % RHYTHM.length];
+    const w = W[size];
+    let sides = ["left", "right", "center"].filter(s => !prev || s !== prev.side);
+    const side = shuffle ? sides[Math.floor(Math.random() * sides.length)] : sides[i % sides.length];
+    const d = document.createElement("div");
+    d.className = "piece-flow " + side + " size-" + size;
+    d.style.width = w + "%";
+    if (side === "left" && !mobile) d.style.marginLeft = (Math.random() * 6).toFixed(1) + "%";
+    if (side === "right" && !mobile) d.style.marginRight = (Math.random() * 6).toFixed(1) + "%";
+    // tuck up beside the previous piece when it's safe
+    const opposite = prev && ((prev.side === "left" && side === "right") || (prev.side === "right" && side === "left"));
+    if (opposite && prev.w + w <= 90 && 0.75 * w > 0.55 * prev.w)
+      d.style.marginTop = "-" + Math.round(prev.w * 0.45) + "%";
+    d.dataset.speed = { l: 0.03, m: 0.06, s: 0.1 }[size];
+    d.appendChild(makeImg(f, files, i));
+    box.appendChild(reveal(d));
+    prev = { side, w };
+  });
+  return box;
+}
+
+/* ---------- Move on scroll ----------
+   Anything with data-speed drifts at its own pace as you scroll,
+   so smaller pieces glide past faster than large ones.            */
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const mid = window.innerHeight / 2;
+    document.querySelectorAll("[data-speed]").forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+      const offset = (r.top + r.height / 2 - mid) * -Number(el.dataset.speed);
+      const target = el.firstElementChild || el;
+      target.style.transform = "translate3d(0," + offset.toFixed(1) + "px,0)";
+    });
+  }
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener("resize", update);
+  setInterval(update, 1000);   // catches photos that load in later
+  update();
+})();
