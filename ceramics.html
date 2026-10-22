@@ -50,48 +50,7 @@
     { prefix: "collab",    title: "Collaborations" },
     { prefix: "horsehair", title: "Horsehair" },
   ];
-  const SINGLES_BETWEEN_SERIES = 5;   // loose pieces shown between each series
-
-  (async () => {
-    const box = document.getElementById("float");
-    const all = await imagesIn("ceramics");
-    if (!all.length) return;
-    dropSoon(box);
-
-    const groups = SERIES.map(s => ({ ...s,
-      files: all.filter(p => new RegExp("^" + s.prefix + "\\d", "i").test(baseName(p))) }))
-      .filter(g => g.files.length);
-    const inSeries = new Set(groups.flatMap(g => g.files));
-    const singles = all.filter(p => !inSeries.has(p));
-
-    // Build the page order: a few loose pieces, then a series, and repeat
-    const order = [];
-    let s = 0, g = 0;
-    while (s < singles.length || g < groups.length) {
-      for (let k = 0; k < SINGLES_BETWEEN_SERIES && s < singles.length; k++)
-        order.push({ type: "piece", file: singles[s++], z: k });
-      if (g < groups.length) order.push({ type: "series", group: groups[g++] });
-    }
-
-    const viewSet = order.flatMap(o => o.type === "piece" ? [o.file] : o.group.files);
-    let n = 0;
-    order.forEach(o => {
-      if (o.type === "piece") {
-        const div = document.createElement("div");
-        div.className = "piece z" + o.z;
-        div.appendChild(makeImg(o.file, viewSet, n++));
-        box.appendChild(reveal(div));
-      } else {
-        const sec = document.createElement("div");
-        sec.className = "series";
-        sec.innerHTML = "<h3></h3><div class='row'></div>";
-        sec.querySelector("h3").textContent = o.group.title;
-        const row = sec.querySelector(".row");
-        o.group.files.forEach(f => row.appendChild(makeImg(f, viewSet, n++)));
-        box.appendChild(reveal(sec));
-      }
-    });
-  })();
+  loadFloat("float", "ceramics", SERIES);
 </script>
 </body>
 </html>

@@ -32,11 +32,11 @@
          Film Photos -> folder "Photos"     Paintings -> folder "Paintings" -->
   <div class="tiles">
 
-    <div class="tile" id="tile-photos" data-reveal>
+    <a class="tile" id="tile-photos" href="film-photos.html" data-reveal>
       <div class="cover">Coming soon</div>
       <h3>Film Photos</h3>
       <span class="count">35mm</span>
-    </div>
+    </a>
 
     <!-- Zines: both covers, linking to the Trip & Transform zines -->
     <a class="tile" href="trip-and-transform.html#zines" data-reveal>
@@ -45,7 +45,7 @@
         <img src="https://cdnm.heyzine.com/flip-book/cover/8e79673e3f1.jpg" alt="Trip & Transform Vol. 2 cover">
       </div>
       <h3>Zines</h3>
-      <span class="count">Trip &amp; Transform · see spreads</span>
+      <span class="count">Trip &amp; Transform · read</span>
     </a>
 
     <!-- Coffee Table Books: opens the Heyzine flipbook as a pop-up.
@@ -91,7 +91,7 @@
 <script src="https://cdnm.heyzine.com/release/addons.7.min.js" onload="heyzinea.addons.init();"></script>
 <script src="site.js"></script>
 <script>
-  loadTile("tile-photos", "photos");
+  coverOnly("tile-photos", "photos");   // cover photo; the tile opens film-photos.html
   loadTile("tile-paintings", "paintings");
   useCover("shabri-cover", "shabri01");
 </script>

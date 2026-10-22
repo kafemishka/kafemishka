@@ -39,18 +39,15 @@
     <h2>The Zines</h2>
     <!-- EDIT ME -->
     <p>Two printed volumes of photography and writing from the road.
-       Selected spreads from each are below.</p>
-    <!-- PRIVACY: the covers are NOT linked to the full flipbooks right now.
-         Once the flipbooks are password-protected on Heyzine, we can turn
-         the links back on. -->
+       Click a cover to read. Selected spreads from each are below.</p>
     <div class="zines" data-reveal>
       <div class="zine">
-        <a href="#vol1"><img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" class="fp-thumb" alt="Trip & Transform Vol. 1 cover"></a>
-        <span class="soon" style="margin-top:14px">Volume 1 · 75 pages · see spreads ↓</span>
+        <a href="https://heyzine.com/flip-book/539fd98f04.html" target="_blank" class="heyzine-link fp-link" data-heyzine-open="modal"><img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" class="fp-thumb" alt="Trip & Transform Vol. 1 cover"></a>
+        <span class="soon" style="margin-top:14px">Volume 1 · 75 pages · click to read</span>
       </div>
       <div class="zine">
-        <a href="#vol2"><img src="https://cdnm.heyzine.com/flip-book/cover/8e79673e3f1.jpg" class="fp-thumb" alt="Trip & Transform Vol. 2 cover"></a>
-        <span class="soon" style="margin-top:14px">Volume 2 · 215 pages · see spreads ↓</span>
+        <a href="https://heyzine.com/flip-book/8e79673e3f.html" target="_blank" class="heyzine-link fp-link" data-heyzine-open="modal"><img src="https://cdnm.heyzine.com/flip-book/cover/8e79673e3f1.jpg" class="fp-thumb" alt="Trip & Transform Vol. 2 cover"></a>
+        <span class="soon" style="margin-top:14px">Volume 2 · 215 pages · click to read</span>
       </div>
     </div>
   </div>
@@ -63,6 +60,7 @@
     <p>Spreads from the first zine, and where the name came from.</p>
   </div>
   <p class="soon">Spreads coming soon</p>
+  <div class="strip" id="strip1"></div>
   <div class="strip-bar">
     <span class="strip-hint">Scroll sideways or use the arrows · click a spread to enlarge</span>
     <span class="strip-arrows">
@@ -70,7 +68,6 @@
       <button aria-label="Next spread" data-strip="strip1" data-dir="1">→</button>
     </span>
   </div>
-  <div class="strip" id="strip1"></div>
 
   <!-- ===== VOLUME 2 ===== -->
   <div class="chapter" id="vol2" data-reveal>
@@ -80,6 +77,7 @@
     <p>Spreads from the second zine, and the way it ended.</p>
   </div>
   <p class="soon">Spreads coming soon</p>
+  <div class="strip" id="strip2"></div>
   <div class="strip-bar">
     <span class="strip-hint">Scroll sideways or use the arrows · click a spread to enlarge</span>
     <span class="strip-arrows">
@@ -87,7 +85,6 @@
       <button aria-label="Next spread" data-strip="strip2" data-dir="1">→</button>
     </span>
   </div>
-  <div class="strip" id="strip2"></div>
 
   <!-- ===== MORE FROM THE TRIP ===== -->
   <div class="block" id="more">
@@ -128,6 +125,8 @@
 
 </div>
 
+<!-- Heyzine's pop-up reader (makes the zine covers open on this page) -->
+<script src="https://cdnm.heyzine.com/release/addons.7.min.js" onload="heyzinea.addons.init();"></script>
 <script src="site.js"></script>
 <script>
   /* ===== SPREAD NAMES (upload anywhere, any folder) =====
@@ -154,8 +153,8 @@
     const spreads = await imagesMatching(spreadRe);
     const all = [...letters, ...spreads];
     if (!all.length) return;
-    const bar = strip.previousElementSibling;
-    bar.previousElementSibling.remove();      // the "coming soon" line
+    const bar = strip.nextElementSibling;
+    strip.previousElementSibling.remove();    // the "coming soon" line
     bar.style.display = "flex";
     let n = 0;
     all.forEach((p, i) => {

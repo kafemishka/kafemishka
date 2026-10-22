@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Film Photos · Kafe Mishka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="logo" href="index.html">Кафе Mishka<span>Kafe Mishka</span></a>
+    <nav>
+      <a href="trip-and-transform.html">Trip &amp; Transform</a>
+      <a href="ceramics.html">Ceramics</a>
+      <a class="here" href="portfolio.html">Portfolio</a>
+      <a href="style.html">Style</a>
+      <a href="exhibition.html">Exhibition</a>
+    </nav>
+  </header>
+
+  <div class="page-title">
+    <a href="portfolio.html" class="soon" style="display:inline-block;margin:0 0 10px">← Portfolio</a>
+    <h1>Film Photos</h1>
+    <!-- EDIT ME -->
+    <p>35mm, mostly. Click any photo to see it large.</p>
+  </div>
+
+  <!-- Everything in the "Photos" folder shows up here automatically. -->
+  <div>
+    <p class="soon">Photos coming soon</p>
+    <div class="float" id="float"></div>
+  </div>
+
+  <footer>
+    <span>© 2026 Кафе Mishka</span>
+    <a href="index.html">← Home</a>
+  </footer>
+
+</div>
+
+<script src="site.js"></script>
+<script>
+  /* ===== SERIES (optional) =====
+     Photos whose names start with these words stay together in a row,
+     e.g. tokyo01.jpg, tokyo02.jpg ...  Add a line to make a series.   */
+  const SERIES = [
+    // { prefix: "tokyo", title: "Tokyo" },
+  ];
+  loadFloat("float", "photos", SERIES);
+</script>
+</body>
+</html>

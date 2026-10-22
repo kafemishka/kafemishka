@@ -159,3 +159,62 @@ function scrollSpy(navId) {
   }, { rootMargin: "-35% 0px -60% 0px" });
   links.forEach(a => { const s = document.querySelector(a.getAttribute("href")); if (s) spy.observe(s); });
 }
+
+/* ---------- Floating zig-zag gallery (Ceramics, Film Photos) ----------
+   series = [{ prefix: "cookie", title: "Cookie" }, ...]
+   Photos named prefix01, prefix02 ... stay together in a row.     */
+async function loadFloat(boxId, folder, series, between) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  series = series || [];
+  between = between || 5;
+  const all = await imagesIn(folder);
+  if (!all.length) return;
+  dropSoon(box);
+
+  const groups = series.map(s => ({ ...s,
+    files: all.filter(p => new RegExp("^" + s.prefix + "\\d", "i").test(baseName(p))) }))
+    .filter(g => g.files.length);
+  const inSeries = new Set(groups.flatMap(g => g.files));
+  const singles = all.filter(p => !inSeries.has(p));
+
+  const order = [];
+  let s = 0, g = 0;
+  while (s < singles.length || g < groups.length) {
+    for (let k = 0; k < between && s < singles.length; k++)
+      order.push({ type: "piece", file: singles[s++], z: k });
+    if (g < groups.length) order.push({ type: "series", group: groups[g++] });
+  }
+
+  const viewSet = order.flatMap(o => o.type === "piece" ? [o.file] : o.group.files);
+  let n = 0;
+  order.forEach(o => {
+    if (o.type === "piece") {
+      const div = document.createElement("div");
+      div.className = "piece z" + o.z;
+      div.appendChild(makeImg(o.file, viewSet, n++));
+      box.appendChild(reveal(div));
+    } else {
+      const sec = document.createElement("div");
+      sec.className = "series";
+      sec.innerHTML = "<h3></h3><div class='row'></div>";
+      sec.querySelector("h3").textContent = o.group.title;
+      const row = sec.querySelector(".row");
+      o.group.files.forEach(f => row.appendChild(makeImg(f, viewSet, n++)));
+      box.appendChild(reveal(sec));
+    }
+  });
+}
+
+/* ---------- Tile that links to its own page: just fill in the cover ---------- */
+async function coverOnly(tileId, folder) {
+  const tile = document.getElementById(tileId);
+  if (!tile) return;
+  const list = await imagesIn(folder);
+  if (!list.length) return;
+  const cover = tile.querySelector(".cover");
+  cover.innerHTML = "";
+  cover.appendChild(makeImg(list[0]));
+  tile.querySelector(".count").textContent =
+    list.length + (list.length === 1 ? " photo" : " photos") + " · view";
+}
