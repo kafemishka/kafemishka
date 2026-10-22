@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Arrange · Kafe Mishka</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .arrange { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+               gap: 12px; margin: 28px 0 40px; }
+    .arrange .item { position: relative; cursor: grab; background: var(--line); user-select: none; }
+    .arrange .item img { width: 100%; aspect-ratio: 1; object-fit: cover; pointer-events: none; }
+    .arrange .item span { position: absolute; top: 6px; left: 6px; background: var(--ink); color: var(--bg);
+                          font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 100px; }
+    .arrange .ghost { opacity: .35; }
+    .bar { position: sticky; top: 0; z-index: 5; background: var(--bg);
+           display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+           padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .done { font-size: 13px; color: var(--accent); }
+    ol.steps { margin: 18px 0 0 20px; color: var(--muted); max-width: 620px; }
+    ol.steps li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-title" style="padding-top:48px">
+    <h1>Arrange</h1>
+    <p>A private helper page (not linked anywhere on the site) for setting the order of
+       "finished pieces" on the Ceramics page.</p>
+    <ol class="steps">
+      <li>Drag the photos into the order you want. Number 1 shows first.</li>
+      <li>Click <strong>Copy order</strong>.</li>
+      <li>On GitHub, open <strong>ceramics-order.txt</strong>, click the pencil, select everything
+          (Cmd+A), paste (Cmd+V), and click <strong>Commit changes</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="bar">
+    <button class="button" id="copy">Copy order</button>
+    <span class="done" id="done"></span>
+  </div>
+
+  <p class="soon" id="loading">Loading photos…</p>
+  <div class="arrange" id="grid"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="site.js"></script>
+<script>
+  const HEADER = `# ORDER OF "finished pieces" ON THE CERAMICS PAGE
+# One photo per line, top = first. Move lines up and down to reorder.
+# The .jpg ending doesn't matter. Lines starting with # are ignored.
+# Photos not listed here show up at the end.
+# Easier: open kafemishka.com/arrange.html, drag photos into order,
+# click "Copy order", then paste it over everything in this file.
+
+`;
+  const grid = document.getElementById("grid");
+
+  function renumber() {
+    [...grid.children].forEach((el, i) => el.querySelector("span").textContent = i + 1);
+  }
+
+  (async () => {
+    // Always ask GitHub fresh here, so newly uploaded photos appear
+    try { localStorage.removeItem("km-files"); } catch (e) {}
+    const files = (await imagesIn("ceramics")).filter(p => /^img_/i.test(baseName(p)));
+    let names = [];
+    try {
+      const r = await fetch("ceramics-order.txt", { cache: "no-store" });
+      if (r.ok) names = (await r.text()).split(/\r?\n/).map(l => l.trim().toLowerCase().replace(/\.[a-z]+$/, ""))
+                                         .filter(l => l && !l.startsWith("#"));
+    } catch (e) {}
+    const rank = n => { const i = names.indexOf(n); return i < 0 ? 1e6 : i; };
+    files.sort((a, b) => rank(baseName(a).toLowerCase()) - rank(baseName(b).toLowerCase()));
+
+    document.getElementById("loading").remove();
+    files.forEach(f => {
+      const d = document.createElement("div");
+      d.className = "item";
+      d.dataset.name = baseName(f);
+      const img = new Image(); img.src = encodeURI(f); img.alt = "";
+      d.append(img, document.createElement("span"));
+      grid.appendChild(d);
+    });
+    renumber();
+    new Sortable(grid, { animation: 180, ghostClass: "ghost", onEnd: renumber });
+  })();
+
+  document.getElementById("copy").onclick = async () => {
+    const text = HEADER + [...grid.children].map(el => el.dataset.name).join("\n") + "\n";
+    const done = document.getElementById("done");
+    try {
+      await navigator.clipboard.writeText(text);
+      done.textContent = "Copied. Now paste it into ceramics-order.txt on GitHub.";
+    } catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.width = "100%"; ta.rows = 10;
+      done.textContent = "Couldn't copy automatically. Select this text and copy it:";
+      done.after(ta);
+    }
+  };
+</script>
+</body>
+</html>

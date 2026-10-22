@@ -49,16 +49,20 @@
      typed. Sections appear in this order, and each one gets a
      button in the sticky menu at the top.
 
-     layout:   "float" = airy gallery, mixed sizes
-               "bunch" = tight grouped cluster
-               "row"   = one straight row
+     layout:   "float"   = airy gallery, mixed sizes, drifts on scroll
+               "bunch"   = tight grouped cluster
+               "natural" = photos keep the sizes YOU gave them
+                           (a bigger file shows bigger)
+               "row"     = one straight row
      shuffle:  true = new random order on every visit
+     orderFile: a text file listing the photos in the order you want
+                (see ceramics-order.txt, or use arrange.html)
      inside:   a smaller sub-group shown inside the section above it
      captions: a short line under one specific photo                 */
   const SECTIONS = [
-    { title: "finished pieces",     prefixes: ["img_"],      layout: "float", shuffle: true },
-    { title: "horse hair raku",     prefixes: ["horsehair"], layout: "bunch" },
-    { title: "M+N collab",          prefixes: ["collab"],    layout: "bunch" },
+    { title: "finished pieces",     prefixes: ["img_"],      layout: "float", orderFile: "ceramics-order.txt" },
+    { title: "m+n collab",          prefixes: ["collab"],    layout: "bunch" },
+    { title: "horse hair raku",     prefixes: ["horsehair"], layout: "natural" },
     { title: "utilitarian pottery", prefixes: ["inuse"],     layout: "bunch",
       inside: { title: "ginger cookie anyone?", prefixes: ["cookie"], layout: "row" } },
     { title: "in the studio",       prefixes: ["studio", "kafe"], layout: "bunch",
@@ -71,7 +75,7 @@
   function render(files, layout, shuffle, captions) {
     if (layout === "float") return renderFloat(files, shuffle);
     const box = document.createElement("div");
-    box.className = layout;                         // "bunch" or "row"
+    box.className = layout;                         // "bunch", "natural" or "row"
     if (layout === "row") box.style.setProperty("--n", files.length);
     files.forEach((f, i) => {
       const img = makeImg(f, files, i);
@@ -88,11 +92,40 @@
         box.appendChild(layout === "bunch" ? reveal(img) : img);
       }
     });
+    if (layout === "natural") sizeNaturally(box);
     if (layout === "row") return reveal(box);
-    const holder = document.createElement("div");   // cluster drifts gently on scroll
-    holder.dataset.speed = 0.05;
-    holder.appendChild(box);
-    return holder;
+    return box;
+  }
+
+  // "natural": the largest file fills 70% of the page width,
+  // and every other photo is scaled down by the same amount.
+  function sizeNaturally(box) {
+    const imgs = [...box.querySelectorAll("img")];
+    const apply = () => {
+      const widths = imgs.map(i => i.naturalWidth || 0);
+      const max = Math.max(...widths);
+      if (!max) return;
+      imgs.forEach((img, k) => {
+        const el = img.closest("figure") || img;
+        el.style.width = Math.max(18, widths[k] / max * 70).toFixed(1) + "%";
+      });
+    };
+    imgs.forEach(i => i.addEventListener("load", apply));
+    apply();
+  }
+
+  // Read a list of file names (one per line) to set a purposeful order.
+  async function orderBy(files, orderFile) {
+    try {
+      const r = await fetch(orderFile, { cache: "no-store" });
+      if (!r.ok) return files;
+      const names = (await r.text()).split(/\r?\n/)
+        .map(l => l.trim().toLowerCase().replace(/\.[a-z]+$/, ""))
+        .filter(l => l && !l.startsWith("#"));
+      const rank = n => { const i = names.indexOf(n); return i < 0 ? 1e6 : i; };
+      return files.slice().sort((a, b) =>
+        rank(baseName(a).toLowerCase()) - rank(baseName(b).toLowerCase()));
+    } catch (e) { return files; }
   }
 
   function heading(tag, text, cls) {
@@ -116,6 +149,8 @@
       sec, files: take(sec.prefixes),
       sub: sec.inside ? { ...sec.inside, files: take(sec.inside.prefixes) } : null }));
     const leftover = all.filter(p => !used.has(p));
+
+    for (const b of built) if (b.sec.orderFile) b.files = await orderBy(b.files, b.sec.orderFile);
 
     built.forEach(({ sec, files, sub }) => {
       if (!files.length && !(sub && sub.files.length)) return;

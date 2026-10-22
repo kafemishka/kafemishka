@@ -316,7 +316,7 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
 .series .row img { flex: none; height: 340px; width: auto; max-width: 100%; object-fit: contain; cursor: zoom-in; }
 
 /* ---------- Varied-scale flow (Ceramics, Film Photos) ---------- */
-.flow { display: flex; flex-direction: column; gap: 64px; padding-top: 40px; }
+.flow { display: flex; flex-direction: column; gap: 64px; padding-top: 64px; }
 .piece-flow.left   { align-self: flex-start; }
 .piece-flow.right  { align-self: flex-end; }
 .piece-flow.center { align-self: center; }
@@ -330,6 +330,11 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
              text-transform: none; position: relative; z-index: 2; }
 .cer-section .flow { gap: 48px; }
 .cap { break-inside: avoid; margin-bottom: 10px; }
+/* "natural": photos keep the sizes you gave them */
+.natural { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.natural img { width: 100%; cursor: zoom-in; }
+.natural > img { flex: none; }
+@media (max-width: 700px) { .natural > img { min-width: 40%; } }
 .cap img { margin-bottom: 0; }
 .cap figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
 .cer-subtitle { font-size: 20px; font-style: italic; font-weight: 500;

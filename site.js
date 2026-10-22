@@ -301,7 +301,8 @@ function renderFloat(files, shuffle) {
     document.querySelectorAll("[data-speed]").forEach(el => {
       const r = el.getBoundingClientRect();
       if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
-      const offset = (r.top + r.height / 2 - mid) * -Number(el.dataset.speed);
+      let offset = (r.top + r.height / 2 - mid) * -Number(el.dataset.speed);
+      offset = Math.max(-36, Math.min(36, offset));   // never drift far enough to cover a title
       const target = el.firstElementChild || el;
       target.style.transform = "translate3d(0," + offset.toFixed(1) + "px,0)";
     });

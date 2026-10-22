@@ -1,0 +1,47 @@
+# ORDER OF "finished pieces" ON THE CERAMICS PAGE
+# One photo per line, top = first. Move lines up and down to reorder.
+# The .jpg ending doesn't matter. Lines starting with # are ignored.
+# Photos not listed here show up at the end.
+# Easier: open kafemishka.com/arrange.html, drag photos into order,
+# click "Copy order", then paste it over everything in this file.
+
+IMG_0163
+IMG_2413
+IMG_2418
+IMG_2419
+IMG_2424
+IMG_2426
+IMG_2432
+IMG_2438
+IMG_2440
+IMG_2442
+IMG_2453
+IMG_2454
+IMG_2459
+IMG_2460
+IMG_2464
+IMG_2468
+IMG_2469
+IMG_2476
+IMG_2709
+IMG_2717
+IMG_6137
+IMG_6140
+IMG_6145
+IMG_6459
+IMG_6462
+IMG_6472
+IMG_6474
+IMG_6511
+IMG_6619
+IMG_6621
+IMG_6637
+IMG_6652
+IMG_6653
+IMG_6660
+IMG_7080
+IMG_7089
+IMG_7094
+IMG_7103
+IMG_7106
+IMG_7109
