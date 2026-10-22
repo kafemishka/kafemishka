@@ -17,19 +17,23 @@ let filesPromise = null;
 function getFiles() {
   if (filesPromise) return filesPromise;
   filesPromise = (async () => {
-    try {
-      const c = JSON.parse(sessionStorage.getItem("km-files") || "null");
-      if (c && Date.now() - c.t < 3 * 60 * 1000) return c.paths;
-    } catch (e) {}
+    // Remember the file list for 10 minutes, so browsing the site
+    // doesn't keep asking GitHub (GitHub allows ~60 asks per hour).
+    let cached = null;
+    try { cached = JSON.parse(localStorage.getItem("km-files") || "null"); } catch (e) {}
+    if (cached && Date.now() - cached.t < 10 * 60 * 1000) return cached.paths;
     try {
       const r = await fetch("https://api.github.com/repos/" + REPO +
                             "/git/trees/" + BRANCH + "?recursive=1");
-      if (!r.ok) return [];
+      if (!r.ok) throw new Error("GitHub said " + r.status);
       const data = await r.json();
       const paths = data.tree.filter(x => x.type === "blob").map(x => x.path);
-      try { sessionStorage.setItem("km-files", JSON.stringify({ t: Date.now(), paths })); } catch (e) {}
+      try { localStorage.setItem("km-files", JSON.stringify({ t: Date.now(), paths })); } catch (e) {}
       return paths;
-    } catch (e) { return []; }
+    } catch (e) {
+      console.warn("Kafe Mishka: couldn't get the file list.", e);
+      return cached ? cached.paths : [];   // fall back to the last list we had
+    }
   })();
   return filesPromise;
 }

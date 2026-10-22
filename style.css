@@ -2,12 +2,16 @@
    KAFE MISHKA — shared styles for every page
    =====================================================
 
-   FONTS — to try a different look, change these two lines
-   (and the matching Google Fonts link at the top of each page).
-   Options that support Cyrillic (needed for "Кафе"):
-     Headings: "Manrope", "Cormorant Garamond", "Unbounded",
-               "Playfair Display", "EB Garamond", "Onest"
-     Body:     "Manrope", "Inter", "Onest", "PT Sans"          */
+   CHANGING FONTS (this one file changes the whole site):
+   1. In the @import line below, replace "Manrope" with the
+      font name from fonts.google.com (spaces become +),
+      e.g. family=Cormorant+Garamond:wght@400;500;700
+   2. In --font-head / --font-body, put the same name in quotes.
+   Fonts that also support Cyrillic (needed for "Кафе"):
+     "Manrope", "Cormorant Garamond", "Unbounded", "Playfair Display",
+     "EB Garamond", "Onest", "Inter", "PT Sans"                    */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
+
 :root {
   --font-head: "Manrope", system-ui, sans-serif;
   --font-body: "Manrope", system-ui, sans-serif;
@@ -52,6 +56,8 @@ header {
 }
 .logo { font-family: var(--font-head); font-weight: 800; font-size: 22px;
         letter-spacing: -0.03em; }
+.logo span { font-weight: 400; color: var(--muted); font-size: 16px;
+             letter-spacing: 0; margin-left: 10px; }
 nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 12px;
       text-transform: uppercase; letter-spacing: 0.1em; }
 nav a { color: var(--muted); transition: color .2s; }
