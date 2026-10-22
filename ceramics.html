@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ceramics · Kafe Mishka</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,11 +24,13 @@
   <div class="page-title">
     <h1>Ceramics</h1>
     <!-- EDIT ME: the blurb about your ceramics -->
-    <p>Kafe Mishka ceramics, est. 2026. Every piece signed Кафе Mishka.</p>
+    <p>Kafe Mishka Ceramics, est. 2026</p>
   </div>
 
   <!-- Everything in the "ceramics" folder shows up here automatically,
        sorted into the sections listed at the bottom of this file. -->
+  <!-- Sticky menu: filled in automatically with the sections below -->
+  <div class="spy lower" id="spy"></div>
   <p class="soon">Pieces coming soon</p>
   <div id="ceramics"></div>
 
@@ -42,50 +45,54 @@
 <script>
   /* ===== CERAMICS SECTIONS =====  EDIT ME
      Each section collects the photos whose file names START with
-     its prefix (img_, horsehair, collab ...), in number order.
-     Change titles freely. Sections appear in this order.
+     one of its prefixes, in number order. Titles appear exactly as
+     typed. Sections appear in this order, and each one gets a
+     button in the sticky menu at the top.
 
-     layout:  "float"  = airy zig-zag gallery
-              "bunch"  = tight grouped cluster
-              "row"    = one straight row
-              "single" = one photo with a caption underneath
-     shuffle: true = new random order on every visit
-     inside:  a smaller sub-group shown inside the section above it */
+     layout:   "float" = airy gallery, mixed sizes
+               "bunch" = tight grouped cluster
+               "row"   = one straight row
+     shuffle:  true = new random order on every visit
+     inside:   a smaller sub-group shown inside the section above it
+     captions: a short line under one specific photo                 */
   const SECTIONS = [
-    { title: "Finished Pieces",     prefix: "img_",      layout: "float", shuffle: true },
-    { title: "Horse Hair Raku",     prefix: "horsehair", layout: "bunch" },
-    { title: "M+N Collab",          prefix: "collab",    layout: "bunch" },
-    { title: "Utilitarian Pottery", prefix: "inuse",     layout: "bunch",
-      inside: { title: "Ginger cookie anyone?", prefix: "cookie", layout: "row" } },
-    { title: "",                    prefix: "kafemishkabag", layout: "single",
-      caption: "Pottery bag embroidery by NR" },
+    { title: "finished pieces",     prefixes: ["img_"],      layout: "float", shuffle: true },
+    { title: "horse hair raku",     prefixes: ["horsehair"], layout: "bunch" },
+    { title: "M+N collab",          prefixes: ["collab"],    layout: "bunch" },
+    { title: "utilitarian pottery", prefixes: ["inuse"],     layout: "bunch",
+      inside: { title: "ginger cookie anyone?", prefixes: ["cookie"], layout: "row" } },
+    { title: "in the studio",       prefixes: ["studio", "kafe"], layout: "bunch",
+      captions: { kafemishkabag: "pottery bag embroidery by NR" } },
   ];
   // Photos that match no section are shown at the very end, untitled.
 
-  const mix = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const slug = t => "s-" + t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-  function render(files, layout, shuffle) {
-    files = shuffle ? mix(files.slice()) : files;
+  function render(files, layout, shuffle, captions) {
+    if (layout === "float") return renderFloat(files, shuffle);
     const box = document.createElement("div");
-    if (layout === "float") {
-      return renderFloat(files, shuffle);
-    } else {
-      box.className = layout;                       // "bunch", "row" or "single"
-      if (layout === "row") box.style.setProperty("--n", files.length);
-      files.forEach((f, i) => {
-        const img = makeImg(f, files, i);
-        img.loading = "eager";
+    box.className = layout;                         // "bunch" or "row"
+    if (layout === "row") box.style.setProperty("--n", files.length);
+    files.forEach((f, i) => {
+      const img = makeImg(f, files, i);
+      img.loading = "eager";
+      const cap = captions && captions[baseName(f).toLowerCase()];
+      if (cap) {
+        const fig = document.createElement("figure");
+        fig.className = "cap";
+        const fc = document.createElement("figcaption");
+        fc.textContent = cap;
+        fig.append(img, fc);
+        box.appendChild(layout === "bunch" ? reveal(fig) : fig);
+      } else {
         box.appendChild(layout === "bunch" ? reveal(img) : img);
-      });
-      if (layout !== "bunch") reveal(box);
-    }
-    if (layout === "bunch") {                    // whole cluster drifts gently
-      const holder = document.createElement("div");
-      holder.dataset.speed = 0.05;
-      holder.appendChild(box);
-      return holder;
-    }
-    return box;
+      }
+    });
+    if (layout === "row") return reveal(box);
+    const holder = document.createElement("div");   // cluster drifts gently on scroll
+    holder.dataset.speed = 0.05;
+    holder.appendChild(box);
+    return holder;
   }
 
   function heading(tag, text, cls) {
@@ -96,32 +103,35 @@
 
   (async () => {
     const page = document.getElementById("ceramics");
+    const spy = document.getElementById("spy");
     const all = await imagesIn("ceramics");
-    if (!all.length) return;
+    if (!all.length) { spy.remove(); return; }
     dropSoon(page);
     const used = new Set();
-    const take = prefix => all.filter(p => !used.has(p) &&
-      baseName(p).toLowerCase().startsWith(prefix.toLowerCase())).map(p => (used.add(p), p));
+    const take = prefixes => all.filter(p => !used.has(p) &&
+      prefixes.some(x => baseName(p).toLowerCase().startsWith(x.toLowerCase())))
+      .map(p => (used.add(p), p));
 
-    const built = SECTIONS.map(sec => {
-      const files = take(sec.prefix);
-      const sub = sec.inside ? { ...sec.inside, files: take(sec.inside.prefix) } : null;
-      return { sec, files, sub };
-    });
+    const built = SECTIONS.map(sec => ({
+      sec, files: take(sec.prefixes),
+      sub: sec.inside ? { ...sec.inside, files: take(sec.inside.prefixes) } : null }));
     const leftover = all.filter(p => !used.has(p));
 
     built.forEach(({ sec, files, sub }) => {
       if (!files.length && !(sub && sub.files.length)) return;
       const wrap = document.createElement("section");
-      wrap.className = "cer-section";
-      if (sec.title) wrap.appendChild(reveal(heading("h2", sec.title, "cer-title")));
-      if (files.length) wrap.appendChild(render(files, sec.layout, sec.shuffle));
-      if (sec.caption && files.length) wrap.appendChild(heading("p", sec.caption, "cer-caption"));
+      wrap.className = "cer-section block";
+      wrap.id = slug(sec.title);
+      wrap.appendChild(reveal(heading("h2", sec.title, "cer-title")));
+      if (files.length) wrap.appendChild(render(files, sec.layout, sec.shuffle, sec.captions));
       if (sub && sub.files.length) {
-        if (sub.title) wrap.appendChild(reveal(heading("h3", sub.title, "cer-subtitle")));
-        wrap.appendChild(render(sub.files, sub.layout, false));
+        wrap.appendChild(reveal(heading("h3", sub.title, "cer-subtitle")));
+        wrap.appendChild(render(sub.files, sub.layout, false, sub.captions));
       }
       page.appendChild(wrap);
+      const a = document.createElement("a");
+      a.href = "#" + wrap.id; a.textContent = sec.title;
+      spy.appendChild(a);
     });
 
     if (leftover.length) {
@@ -130,6 +140,7 @@
       wrap.appendChild(render(leftover, "bunch", false));
       page.appendChild(wrap);
     }
+    if (spy.children.length < 2) spy.remove(); else scrollSpy("spy");
   })();
 </script>
 </body>

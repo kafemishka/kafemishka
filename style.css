@@ -10,7 +10,7 @@
    Fonts that also support Cyrillic (needed for "Кафе"):
      "Manrope", "Cormorant Garamond", "Unbounded", "Playfair Display",
      "EB Garamond", "Onest", "Inter", "PT Sans"                    */
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
   --font-head: "Manrope", system-ui, sans-serif;
@@ -265,6 +265,7 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
 }
 .spy a:hover { color: var(--ink); }
 .spy a.active { background: var(--ink); color: var(--bg); }
+.spy.lower a { text-transform: none; letter-spacing: 0; font-size: 14px; }  /* keeps titles exactly as typed */
 
 /* Chapter headers (Vol. 1 / Vol. 2) */
 .chapter { padding: 88px 0 24px; scroll-margin-top: 60px; }
@@ -323,12 +324,16 @@ details.story img { width: 100%; margin-bottom: 28px; cursor: zoom-in; }
 @media (max-width: 700px) { .flow { gap: 36px; } .bunch { columns: 2; column-gap: 8px; } .bunch img { margin-bottom: 8px; } }
 
 /* ---------- Ceramics sections ---------- */
-.cer-section { padding: 72px 0 0; }
-.cer-section:first-child { padding-top: 24px; }
-.cer-title { font-size: clamp(30px, 4vw, 44px); margin-bottom: 28px; text-transform: none;
-             position: relative; z-index: 2; }
+.cer-section { padding: 56px 0 0; margin: 0; border: 0; }
+.cer-section:first-child { padding-top: 32px; }
+.cer-title { font-size: clamp(28px, 3.6vw, 40px); font-weight: 600; margin-bottom: 20px;
+             text-transform: none; position: relative; z-index: 2; }
+.cer-section .flow { gap: 48px; }
+.cap { break-inside: avoid; margin-bottom: 10px; }
+.cap img { margin-bottom: 0; }
+.cap figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
 .cer-subtitle { font-size: 20px; font-style: italic; font-weight: 500;
-                letter-spacing: -0.01em; margin: 48px 0 16px; color: var(--accent); }
+                letter-spacing: -0.01em; margin: 36px 0 14px; color: var(--accent); }
 .cer-caption { margin-top: 12px; font-size: 13px; color: var(--muted); letter-spacing: .02em; }
 .cer-section .float { margin-top: 0; }
 /* tight grouped cluster: photos keep their shape, packed in columns */
