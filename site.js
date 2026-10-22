@@ -1,24 +1,58 @@
 /* =====================================================
    KAFE MISHKA — shared behavior for every page
-   (photo galleries, collapsible spreads, lightbox)
    You shouldn't need to edit this file.
+
+   How photos are found: the page asks GitHub ONCE for the
+   list of files in the repository, then shows whatever is
+   in each folder. No renaming needed. Upload a photo and it
+   appears; delete it on GitHub and it disappears.
    ===================================================== */
 
-const ENDINGS = [".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"];
+const REPO = "kafemishka/kafemishka";
+const BRANCH = "main";
+const IMG = /\.(jpe?g|png|webp|gif)$/i;
 
-/* Try a file name in several folders and spellings.
-   Calls done(src) with the first one that exists, or done(null). */
-function findImage(name, folders, done) {
-  const tries = [];
-  folders.forEach(f => ENDINGS.forEach(e => tries.push(f + name + e)));
-  let t = 0;
-  const probe = new Image();
-  probe.onload = () => done(tries[t]);
-  probe.onerror = () => { t++; t < tries.length ? (probe.src = tries[t]) : done(null); };
-  probe.src = tries[0];
+/* ---------- Get the list of files (one request, cached a few minutes) ---------- */
+let filesPromise = null;
+function getFiles() {
+  if (filesPromise) return filesPromise;
+  filesPromise = (async () => {
+    try {
+      const c = JSON.parse(sessionStorage.getItem("km-files") || "null");
+      if (c && Date.now() - c.t < 3 * 60 * 1000) return c.paths;
+    } catch (e) {}
+    try {
+      const r = await fetch("https://api.github.com/repos/" + REPO +
+                            "/git/trees/" + BRANCH + "?recursive=1");
+      if (!r.ok) return [];
+      const data = await r.json();
+      const paths = data.tree.filter(x => x.type === "blob").map(x => x.path);
+      try { sessionStorage.setItem("km-files", JSON.stringify({ t: Date.now(), paths })); } catch (e) {}
+      return paths;
+    } catch (e) { return []; }
+  })();
+  return filesPromise;
 }
 
-/* ---------- Lightbox ---------- */
+const byName = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+const baseName = p => p.split("/").pop().replace(/\.[^.]+$/, "");
+const url = p => encodeURI(p);
+
+/* All images directly inside a folder (any capitalization), sorted. */
+async function imagesIn(folder) {
+  const paths = await getFiles();
+  const f = folder.toLowerCase() + "/";
+  return paths.filter(p => p.toLowerCase().startsWith(f) &&
+                           !p.slice(f.length).includes("/") && IMG.test(p))
+              .sort(byName);
+}
+/* Images anywhere whose name matches a pattern, sorted. */
+async function imagesMatching(regex) {
+  const paths = await getFiles();
+  return paths.filter(p => IMG.test(p) && regex.test(baseName(p))).sort(byName);
+}
+
+/* ---------- Lightbox (big dark photo viewer) ---------- */
 const lb = document.createElement("div");
 lb.className = "lightbox";
 lb.innerHTML =
@@ -33,7 +67,7 @@ let lbSet = [], lbIndex = 0;
 function openLb(set, i) {
   lbSet = set;
   lbIndex = (i + set.length) % set.length;
-  lbImg.src = lbSet[lbIndex];
+  lbImg.src = url(lbSet[lbIndex]);
   lb.classList.add("on");
 }
 function closeLb() { lb.classList.remove("on"); }
@@ -48,87 +82,76 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowRight") openLb(lbSet, lbIndex + 1);
 });
 
-/* Find 01, 02, 03 ... in the given folders. Calls done(list). */
-function collectImages(folders, max, done) {
-  const found = [];
-  let pending = max;
-  for (let i = 1; i <= max; i++) {
-    findImage(String(i).padStart(2, "0"), folders, src => {
-      if (src) found[i] = src;
-      if (--pending === 0) done(found.filter(Boolean));
-    });
-  }
+function makeImg(path, set, i) {
+  const img = new Image();
+  img.src = url(path); img.alt = ""; img.loading = "lazy";
+  img.onerror = () => img.remove();          // just-uploaded files can lag a minute
+  if (set) img.onclick = () => openLb(set, i);
+  return img;
+}
+function dropSoon(el) {
+  const s = el && el.parentElement && el.parentElement.querySelector(".soon");
+  if (s) s.remove();
 }
 
-/* ---------- Numbered photo gallery (full grid) ----------
-   Fills a grid with 01, 02, 03 ... from the given folders.
-   If nothing is found, the "coming soon" note stays.       */
-function loadGallery(gridId, folders, max) {
+/* ---------- Full photo grid from a folder ---------- */
+async function loadGallery(gridId, folder) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
-  collectImages(folders, max, list => {
-    if (!list.length) return;
-    const soon = grid.parentElement.querySelector(".soon");
-    if (soon) soon.remove();
-    list.forEach((s, n) => {
-      const img = new Image();
-      img.src = s; img.alt = ""; img.loading = "lazy";
-      img.onclick = () => openLb(list, n);
-      grid.appendChild(img);
-    });
-  });
+  const list = await imagesIn(folder);
+  if (!list.length) return;
+  dropSoon(grid);
+  list.forEach((p, i) => grid.appendChild(reveal(makeImg(p, list, i))));
 }
 
-/* ---------- Gallery tile (one cover photo) ----------
-   Shows photo 01 as the cover. Clicking it opens the
-   whole set in the big viewer.                            */
-function loadTile(tileId, folders, max) {
+/* ---------- Tile: one cover photo that opens the whole folder ---------- */
+async function loadTile(tileId, folder) {
   const tile = document.getElementById(tileId);
   if (!tile) return;
-  collectImages(folders, max, list => {
-    if (!list.length) return;
-    const cover = tile.querySelector(".cover");
-    cover.innerHTML = "";
-    const img = new Image();
-    img.src = list[0]; img.alt = "";
-    cover.appendChild(img);
-    tile.classList.add("ready");
-    tile.querySelector(".count").textContent =
-      list.length + (list.length === 1 ? " image" : " images") + " · view";
-    tile.onclick = () => openLb(list, 0);
-  });
+  const list = await imagesIn(folder);
+  if (!list.length) return;
+  const cover = tile.querySelector(".cover");
+  cover.innerHTML = "";
+  cover.appendChild(makeImg(list[0]));
+  tile.classList.add("ready");
+  tile.querySelector(".count").textContent =
+    list.length + (list.length === 1 ? " image" : " images") + " · view";
+  tile.onclick = () => openLb(list, 0);
 }
 
-/* ---------- Collapsible stories (spreads) ----------
-   stories = [{ title: "...", file: "spread01", open: true }, ...]
-   A story only appears once its image has been uploaded.   */
-function loadStories(boxId, stories, folders) {
-  const box = document.getElementById(boxId);
-  if (!box) return;
-  const slots = stories.map(() => null);
-  let pending = stories.length;
-  stories.forEach((s, i) => {
-    findImage(s.file, folders, src => {
-      if (src) slots[i] = { ...s, src };
-      if (--pending === 0) {
-        const ready = slots.filter(Boolean);
-        if (!ready.length) return;
-        const soon = box.parentElement.querySelector(".soon");
-        if (soon) soon.remove();
-        const all = ready.map(r => r.src);
-        ready.forEach((r, n) => {
-          const d = document.createElement("details");
-          d.className = "story";
-          if (r.open) d.open = true;
-          d.innerHTML = "<summary></summary>";
-          d.querySelector("summary").textContent = r.title;
-          const img = new Image();
-          img.src = r.src; img.alt = r.title;
-          img.onclick = () => openLb(all, n);
-          d.appendChild(img);
-          box.appendChild(d);
-        });
-      }
+/* ---------- Use an uploaded image (by name) as a cover ---------- */
+async function useCover(imgId, name) {
+  const img = document.getElementById(imgId);
+  if (!img) return;
+  const found = await imagesMatching(new RegExp("^" + name + "$", "i"));
+  if (found.length) img.src = url(found[0]);
+}
+
+/* ---------- Scroll-in animation ---------- */
+const revealer = ("IntersectionObserver" in window) ? new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealer.unobserve(e.target); } });
+}, { rootMargin: "0px 0px -8% 0px" }) : null;
+function reveal(el) {
+  if (!revealer) return el;
+  el.classList.add("reveal");
+  revealer.observe(el);
+  return el;
+}
+document.addEventListener("DOMContentLoaded", () =>
+  document.querySelectorAll("[data-reveal]").forEach(reveal));
+
+/* ---------- Sticky section menu that highlights where you are ---------- */
+function scrollSpy(navId) {
+  const nav = document.getElementById(navId);
+  if (!nav || !("IntersectionObserver" in window)) return;
+  const links = [...nav.querySelectorAll("a[href^='#']")];
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+      const on = nav.querySelector(".active");
+      if (on) nav.scrollTo({ left: on.offsetLeft - nav.clientWidth / 2 + on.offsetWidth / 2, behavior: "smooth" });
     });
-  });
+  }, { rootMargin: "-35% 0px -60% 0px" });
+  links.forEach(a => { const s = document.querySelector(a.getAttribute("href")); if (s) spy.observe(s); });
 }

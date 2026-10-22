@@ -25,55 +25,55 @@
 
   <div class="page-title">
     <h1>Portfolio</h1>
+    <!-- EDIT ME -->
     <p>Work across film, print, paint, and the moving image.</p>
   </div>
 
-  <!-- ===================================================
-       ONE TILE PER SECTION.
-       Photo tiles use photo 01 from their folder as the cover;
+  <!-- ONE TILE PER SECTION.
+       Photo tiles use the first photo in their folder as the cover;
        clicking opens every photo in that folder.
-         Film Photos  -> folder "Photos"
-         Paintings    -> folder "Paintings"
-         Coffee Table Books -> folder "Books"
-       =================================================== -->
+         Film Photos -> folder "Photos"     Paintings -> folder "Paintings" -->
   <div class="tiles">
 
-    <div class="tile" id="tile-photos">
+    <div class="tile" id="tile-photos" data-reveal>
       <div class="cover">Coming soon</div>
       <h3>Film Photos</h3>
       <span class="count">35mm</span>
     </div>
 
     <!-- Zines: both covers, linking to the Trip & Transform zines -->
-    <a class="tile" href="trip-and-transform.html#zines">
+    <a class="tile" href="trip-and-transform.html#zines" data-reveal>
       <div class="cover pair">
         <img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" alt="Trip & Transform Vol. 1 cover">
-        <!-- When Vol 2 is on Heyzine, swap the next line for its cover image -->
-        <div class="zine-cover-empty">Vol. 2</div>
+        <img src="https://cdnm.heyzine.com/flip-book/cover/8e79673e3f1.jpg" alt="Trip & Transform Vol. 2 cover">
       </div>
       <h3>Zines</h3>
       <span class="count">Trip &amp; Transform · read</span>
     </a>
 
-    <div class="tile" id="tile-books">
-      <div class="cover">Coming soon</div>
-      <h3>Coffee Table Books</h3>
-      <span class="count">Prints</span>
-    </div>
+    <!-- Coffee table book: opens the Heyzine flipbook as a pop-up.
+         Cover = shabri01.jpg (uploaded anywhere); until then, Heyzine's cover. -->
+    <a class="tile heyzine-link fp-link" href="https://heyzine.com/flip-book/11b882f12f.html" target="_blank" data-heyzine-open="modal" data-reveal>
+      <div class="cover">
+        <img id="shabri-cover" class="fp-thumb" src="https://cdnm.heyzine.com/flip-book/cover/11b882f12f.jpg" alt="Shabriamics cover">
+      </div>
+      <h3>Shabriamics</h3>
+      <span class="count">Coffee table book · The pottery of Sharon Randall</span>
+    </a>
 
-    <div class="tile">
+    <div class="tile" data-reveal>
       <div class="cover">Coming soon</div>
-      <h3>Videos</h3>
+      <h3>Clips</h3>
       <span class="count">Coming soon</span>
     </div>
 
-    <div class="tile">
+    <div class="tile" data-reveal>
       <div class="cover">Coming soon</div>
       <h3>Documentaries</h3>
       <span class="count">Coming soon</span>
     </div>
 
-    <div class="tile" id="tile-paintings">
+    <div class="tile" id="tile-paintings" data-reveal>
       <div class="cover">Coming soon</div>
       <h3>Paintings</h3>
       <span class="count">Coming soon</span>
@@ -88,11 +88,13 @@
 
 </div>
 
+<!-- Heyzine's pop-up reader -->
+<script src="https://cdnm.heyzine.com/release/addons.7.min.js" onload="heyzinea.addons.init();"></script>
 <script src="site.js"></script>
 <script>
-  loadTile("tile-photos",    ["Photos/", "photos/"], 60);
-  loadTile("tile-books",     ["Books/", "books/"], 60);
-  loadTile("tile-paintings", ["Paintings/", "paintings/"], 60);
+  loadTile("tile-photos", "photos");
+  loadTile("tile-paintings", "paintings");
+  useCover("shabri-cover", "shabri01");
 </script>
 </body>
 </html>

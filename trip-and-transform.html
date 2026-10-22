@@ -25,88 +25,91 @@
 
   <div class="page-title">
     <h1>Trip &amp; Transform</h1>
+    <!-- EDIT ME -->
     <p>The name felt cheesy at first. The transformation was happening the whole time.</p>
-    <div class="subnav">
-      <a href="#zines">Zines</a>
-      <a href="#spreads">Spreads</a>
-      <a href="#film">Film</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#globe">Globe</a>
-      <a href="#locations">Locations</a>
-      <a href="#calendars">Cat Calendars</a>
-    </div>
   </div>
 
-  <!-- ===== ZINES ===== -->
-  <div class="block" id="zines">
-    <h2>Zines</h2>
-    <p>Two printed volumes of photography and writing from the road.</p>
-    <div class="zines">
-      <!-- Vol 1: Heyzine pop-up embed. Click the cover to read it on this page. -->
+  <!-- Sticky menu: stays at the top while scrolling and highlights your section -->
+  <div class="spy" id="spy">
+    <a href="#zines">Zines</a>
+    <a href="#vol1">Vol. 1</a>
+    <a href="#vol2">Vol. 2</a>
+    <a href="#more">More from the trip</a>
+  </div>
+
+  <!-- ===== ZINES (compact) ===== -->
+  <div class="block" id="zines" style="margin-top:0">
+    <h2>The Zines</h2>
+    <!-- EDIT ME -->
+    <p>Two printed volumes of photography and writing from the road. Click a cover to read.</p>
+    <div class="zines" data-reveal>
       <div class="zine">
         <a href="https://heyzine.com/flip-book/539fd98f04.html" target="_blank" class="heyzine-link fp-link" data-heyzine-open="modal">
           <img src="https://cdnm.heyzine.com/flip-book/cover/539fd98f042.jpg" class="fp-thumb" alt="Trip & Transform Vol. 1 cover">
         </a>
         <span class="soon" style="margin-top:14px">Volume 1 · 75 pages</span>
-        <h3>Trip &amp; Transform, Vol. 1</h3>
-        <p>Where it started, and where the name came from. Click the cover to read.</p>
       </div>
-
-      <!-- Vol 2: when it's on Heyzine, copy their embed code here,
-           in place of the "zine-cover-empty" line, and remove the
-           style="..." part from their <img> tag. -->
       <div class="zine">
-        <div class="zine-cover-empty">Coming soon</div>
+        <a href="https://heyzine.com/flip-book/8e79673e3f.html" target="_blank" class="heyzine-link fp-link" data-heyzine-open="modal">
+          <img src="https://cdnm.heyzine.com/flip-book/cover/8e79673e3f1.jpg" class="fp-thumb" alt="Trip & Transform Vol. 2 cover">
+        </a>
         <span class="soon" style="margin-top:14px">Volume 2 · 215 pages</span>
-        <h3>Trip &amp; Transform, Vol. 2</h3>
-        <p>The longer road, and the way it ended.</p>
       </div>
     </div>
   </div>
 
-  <!-- ===== SPREADS ===== -->
-  <div class="block" id="spreads">
-    <h2>From the Pages</h2>
-    <p>Selected spreads. Click a title to open it, click the image to see it large.</p>
-    <p class="soon">Spreads coming soon</p>
-    <div class="stories" id="stories"></div>
+  <!-- ===== VOLUME 1 ===== -->
+  <div class="chapter" id="vol1" data-reveal>
+    <span class="kicker">Volume 1</span>
+    <!-- EDIT ME: chapter title and line -->
+    <h2>Where it started</h2>
+    <p>Spreads from the first zine, and where the name came from.</p>
   </div>
+  <p class="soon">Spreads coming soon</p>
+  <div class="strip" id="strip1"></div>
+  <p class="strip-hint">Scroll sideways · click to enlarge</p>
 
-  <!-- ===== FILM ===== -->
-  <div class="block" id="film">
-    <h2>The Film</h2>
-    <p>Two and a half hours, shot on iPhone, first shown on a warehouse wall.</p>
-    <p class="soon">Clips coming soon</p>
-    <!-- LATER: short public clips (the full film stays private) -->
+  <!-- ===== VOLUME 2 ===== -->
+  <div class="chapter" id="vol2" data-reveal>
+    <span class="kicker">Volume 2</span>
+    <!-- EDIT ME: chapter title and line -->
+    <h2>The longer road</h2>
+    <p>Spreads from the second zine, and the way it ended.</p>
   </div>
+  <p class="soon">Spreads coming soon</p>
+  <div class="strip" id="strip2"></div>
+  <p class="strip-hint">Scroll sideways · click to enlarge</p>
 
-  <!-- ===== GALLERY ===== -->
-  <div class="block" id="gallery">
-    <h2>Gallery</h2>
-    <p>Photographs from the trip.</p>
-    <p class="soon">Photos coming soon</p>
-    <div class="grid" id="trip-grid"></div>
-  </div>
-
-  <!-- ===== GLOBE ===== -->
-  <div class="block" id="globe">
-    <h2>The Globe</h2>
-    <p>Everywhere we went. Spin it, pick a place, see what we saw.</p>
-    <p class="soon">Coming later</p>
-  </div>
-
-  <!-- ===== LOCATIONS ===== -->
-  <div class="block" id="locations">
-    <h2>Locations</h2>
-    <p>The places, one by one.</p>
-    <p class="soon">Coming soon</p>
-  </div>
-
-  <!-- ===== CAT CALENDARS ===== -->
-  <div class="block" id="calendars">
-    <h2>Cat Calendars</h2>
-    <p>Exactly what it sounds like.</p>
-    <p class="soon">Coming soon</p>
+  <!-- ===== MORE FROM THE TRIP ===== -->
+  <div class="block" id="more">
+    <h2>More from the trip</h2>
+    <div class="more">
+      <div class="tile" id="tile-trip" data-reveal>
+        <div class="cover">Coming soon</div>
+        <h3>Gallery</h3>
+        <span class="count">Photographs</span>
+      </div>
+      <div class="tile" data-reveal>
+        <div class="cover">Coming soon</div>
+        <h3>The Film</h3>
+        <span class="count">Clips</span>
+      </div>
+      <div class="tile" data-reveal>
+        <div class="cover">Coming later</div>
+        <h3>The Globe</h3>
+        <span class="count">Everywhere we went</span>
+      </div>
+      <div class="tile" data-reveal>
+        <div class="cover">Coming soon</div>
+        <h3>Locations</h3>
+        <span class="count">One by one</span>
+      </div>
+      <div class="tile" data-reveal>
+        <div class="cover">Coming soon</div>
+        <h3>Cat Calendars</h3>
+        <span class="count">Exactly what it sounds like</span>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -120,25 +123,32 @@
 <script src="https://cdnm.heyzine.com/release/addons.7.min.js" onload="heyzinea.addons.init();"></script>
 <script src="site.js"></script>
 <script>
-  /* ===== SPREADS LIST =====
-     Each line is one collapsible story. To add one:
-     upload the image (e.g. spread02.jpg), then add a line here.
-     A story only shows up once its image is uploaded.
-     "open: true" means it starts expanded.                      */
-  const STORIES = [
-    { title: "Editor's Letter", file: "letterspread01", open: true },
-    { title: "Spread 01",       file: "spread01" },   // EDIT ME: rename to the story's title
-    { title: "Spread 02",       file: "spread02" },
-    { title: "Spread 03",       file: "spread03" },
-    { title: "Spread 04",       file: "spread04" },
-    { title: "Spread 05",       file: "spread05" },
-  ];
-
-  // Images can sit loose at the top level, or in a folder named Spreads.
-  loadStories("stories", STORIES, ["", "Spreads/", "spreads/"]);
-
-  // Trip gallery: Trip/01.jpg, Trip/02.jpg ... (up to 40)
-  loadGallery("trip-grid", ["Trip/", "trip/"], 40);
+  /* ===== SPREAD NAMES (upload anywhere, any folder) =====
+     Vol 1: letterspread01.jpg (Editor's Letter), then v1spread01.jpg, v1spread02.jpg ...
+     Vol 2: v2letterspread01.jpg (Editor's Letter), then v2spread01.jpg, v2spread02.jpg ... */
+  async function loadStrip(stripId, letterName, spreadPrefix) {
+    const strip = document.getElementById(stripId);
+    const letters = await imagesMatching(new RegExp("^" + letterName + "\\d+$", "i"));
+    const spreads = await imagesMatching(new RegExp("^" + spreadPrefix + "\\d+$", "i"));
+    const all = [...letters, ...spreads];
+    if (!all.length) return;
+    strip.previousElementSibling.remove();   // the "coming soon" line
+    strip.nextElementSibling.style.display = "block";   // the "scroll sideways" hint
+    all.forEach((p, i) => {
+      const fig = document.createElement("figure");
+      fig.appendChild(makeImg(p, all, i));
+      if (i < letters.length) {
+        const cap = document.createElement("figcaption");
+        cap.textContent = "Editor's Letter";
+        fig.appendChild(cap);
+      }
+      strip.appendChild(reveal(fig));
+    });
+  }
+  loadStrip("strip1", "letterspread", "v1spread");
+  loadStrip("strip2", "v2letterspread", "v2spread");
+  loadTile("tile-trip", "trip");      // photos in a folder named "trip"
+  scrollSpy("spy");
 </script>
 </body>
 </html>
